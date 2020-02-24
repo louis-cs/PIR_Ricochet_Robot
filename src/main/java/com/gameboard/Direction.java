@@ -1,6 +1,4 @@
-package com.gameboard;
-
-import com.sun.scenario.effect.Brightpass;
+package main.java.com.gameboard;
 
 public enum Direction{
     up ,

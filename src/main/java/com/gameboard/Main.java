@@ -1,11 +1,11 @@
-package com.gameboard;
+package main.java.com.gameboard;
 
 public class Main{
 
 	//public Pion[] pions;
 
 	public static void main(String[] args){
-		Plateau p=new Plateau();
+		Gameboard p=new Gameboard();
 		boolean[][][] plateau = p.getPlateau();
 
 		System.out.println();
