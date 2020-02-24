@@ -5,7 +5,7 @@ import java.util.Set;
 
 public class Cell {
 
-    public Set<Direction> walls ;
+    private HashSet<Direction> walls ;
 
     public Cell() {
         walls = new HashSet<>();
@@ -17,5 +17,9 @@ public class Cell {
 
     public boolean PossibleMove(Direction d) {
         return walls.contains(d);
+    }
+
+    public HashSet<Direction> getWalls() {
+        return walls;
     }
 }

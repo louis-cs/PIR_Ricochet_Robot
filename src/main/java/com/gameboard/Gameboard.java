@@ -25,7 +25,7 @@ public class Gameboard {
 		return (x>=0 && x<max && y>=0 && y<max);
 	}
 
-	private Cell getCell(int x, int y) {
+	public Cell getCell(int x, int y) {
 		return cells.get(x).get(y);
 	}
 
@@ -48,33 +48,6 @@ public class Gameboard {
 			placeNeighbourWall(x, y, d);
 		}
 	}
-//	private void placeWallUp(int x, int y){
-//		if(boundsCheck(x,y))
-//			this.plateau[x][y][0]=true;
-//		if(boundsCheck(x-1,y))
-//			this.plateau[x-1][y][2]=true;
-//	}
-//
-//	private void placeWallRight(int x, int y){
-//		if(boundsCheck(x,y))
-//			this.plateau[x][y][1]=true;
-//		if(boundsCheck(x,y+1))
-//			this.plateau[x][y+1][3]=true;
-//	}
-//
-//	private void placeWallDown(int x, int y){
-//		if(boundsCheck(x,y))
-//			this.plateau[x][y][2]=true;
-//		if(boundsCheck(x+1,y))
-//			this.plateau[x+1][y][0]=true;
-//	}
-//
-//	private void placeWallLeft(int x, int y){
-//		if(boundsCheck(x,y))
-//			this.plateau[x][y][3]=true;
-//		if(boundsCheck(x,y-1))
-//			this.plateau[x][y-1][1]=true;
-//	}
 
 	private void initBoard(){
 		cells = new ArrayList<>();
