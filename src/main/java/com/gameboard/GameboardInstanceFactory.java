@@ -31,24 +31,23 @@ public class GameboardInstanceFactory {
             {true, true, false, true, false, false, false, true, false}
     };
 
-    public static GameInstance createGameInstance() {
-        for (int i = 0; i < 9; i++)
-            for (int j = 0; j < 9; j++)
-                assert numbers[i][j] == null ||
-                        (evenFlags[i][j] && numbers[i][j] % 2 == 0) ||
-                        (!evenFlags[i][j] && numbers[i][j] % 2 == 1);
-
-        return new GameInstance() {
-            @Override
-            public Optional<Integer> getNumbers(int i, int j) {
-                return Optional.ofNullable(numbers[i][j]);
-            }
-
-            @Override
-            public boolean isEven(int i, int j) {
-                return evenFlags[i][j];
-            }
-        };
-    }
+//    public static GameInstance createGameInstance() {
+//        for (int i = 0; i < 9; i++)
+//            for (int j = 0; j < 9; j++)
+//                assert numbers[i][j] == null ||
+//                        (evenFlags[i][j] && numbers[i][j] % 2 == 0) ||
+//                        (!evenFlags[i][j] && numbers[i][j] % 2 == 1);
+//
+//        return new GameInstance() {
+//
+//            public Optional<Integer> getNumbers(int i, int j) {
+//                return Optional.ofNullable(numbers[i][j]);
+//            }
+//
+//            public boolean isEven(int i, int j) {
+//                return evenFlags[i][j];
+//            }
+//        };
+//    }
 
 }

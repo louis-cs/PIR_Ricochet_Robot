@@ -1,10 +1,10 @@
 package main.java.com.gameboard;
 
-abstract class GenericGameboard {
+public abstract class GenericGameboard {
 
-    abstract Cell getCell(int x, int y);
+    public abstract Cell getCell(int x, int y);
 
-    abstract GenericGameboard getGameboard();
+    public abstract GenericGameboard getGameboard();
 
-    abstract void display();
+    public abstract void display();
 }

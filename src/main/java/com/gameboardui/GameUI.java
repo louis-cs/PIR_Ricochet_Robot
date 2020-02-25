@@ -1,4 +1,7 @@
-package main.java.com.gameboard;
+package main.java.com.gameboardui;
+
+import main.java.com.gameboard.GenericGameboard;
+import main.java.com.gameboard.HighLevelGameboard;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,8 +31,9 @@ public class GameUI {
     }
 
     public static void main(String[] args) {
+        System.out.println("Affichage de gameboard");
         SwingUtilities.invokeLater(() -> {
-            GenericGameboard board = new HighLevelGameboard(GameboardInstanceFactory.createGameInstance());
+            HighLevelGameboard board = new HighLevelGameboard();
             new GameUI(board);
         });
     }
@@ -44,23 +48,13 @@ public class GameUI {
      * @param gameboard
      */
     private void createCellUI(GenericGameboard gameboard) {
-        CellUI[][] cells = new CellUI[9][9];
-        JPanel[][] squares = new JPanel[3][3];
+        CellUI[][] cells = new CellUI[16][16];
 
-        for(int i=0; i<3; i++){
-            for (int j=0; j<3; j++){
-                JPanel panel = new JPanel();
-                panel.setLayout(new GridBagLayout());
-                squares[i][j] = panel;
-                top.add(panel);
-            }
-        }
-
-        for (int i=0; i<9; i++) {
-            for (int j=0; j<9; j++){
-                CellUI cui = new CellUI(board.getCell(i,j));
+        for (int i=0; i<16; i++) {
+            for (int j=0; j<16; j++){
+                CellUI cui = new CellUI(gameboard.getCell(i,j));
                 cells[i][j] = cui;
-                addComponent(squares[i/3][j/3], cui, j%3, i%3, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
+                addComponent(top, cui, j, i, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
             }
         }
     }
