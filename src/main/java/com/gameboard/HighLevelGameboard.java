@@ -3,7 +3,7 @@ package main.java.com.gameboard;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class Gameboard {
+public class HighLevelGameboard extends GenericGameboard {
 
 	private static int max=16;
 	private ArrayList<ArrayList<Cell>> cells;
@@ -11,7 +11,7 @@ public class Gameboard {
 
 	private Random random = new Random();
 
-	public Gameboard(){
+	public HighLevelGameboard(){
 
 		initBoard();
 
@@ -187,7 +187,7 @@ public class Gameboard {
 		return collision;
 	}
 
-	public Gameboard getGameboard(){
+	public HighLevelGameboard getGameboard(){
 		return this;
 	}
 
