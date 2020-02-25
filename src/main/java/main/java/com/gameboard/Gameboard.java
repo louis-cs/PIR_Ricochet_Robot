@@ -61,27 +61,30 @@ public class Gameboard {
 		}
 	}
 
+	private int randMur() {
+		return random.nextInt(5) + 2;
+	}
 
 	private void placeBorderWalls(){
-		//HAUT
+		//HAUT x=0
 		int r=randMur();
 		placeWall(0,r,Direction.left);
 		r=randMur();
 		placeWall(0,max-r, Direction.left);
 
-		//DROITE
+		//DROITE y=max-1
 		r=randMur();
 		placeWall(r,max-1,Direction.up);
 		r=randMur();
 		placeWall(max-r,max-1,Direction.up);
 
-		//BAS
+		//BAS x=max-1
 		r=randMur();
 		placeWall(max-1,r, Direction.left);
 		r=randMur();
 		placeWall(max-1,max-r, Direction.left);
 
-		//GAUCHE
+		//GAUCHE y=0
 		r=randMur();
 		placeWall(r,0,Direction.up);
 		r=randMur();
@@ -150,11 +153,6 @@ public class Gameboard {
 			}
 			else System.out.println("error generating random board corners");
 		}
-
-	}
-
-	private int randMur() {
-		return random.nextInt(5) + 2;
 	}
 
 	private int[] randCoordCorner() {
@@ -191,5 +189,60 @@ public class Gameboard {
 
 	public Gameboard getGameboard(){
 		return this;
+	}
+
+
+	public void display() {
+
+		for (int i = 0; i < 16; i++) {
+			for (int j = 0; j < 16; j++) {
+				if (this.getCell(i,j).PossibleMove(Direction.up)) {
+					if (this.getCell(i,j).PossibleMove(Direction.right)) {
+						System.out.print("͞ |");//0
+					} else if (this.getCell(i,j).PossibleMove(Direction.left)) {
+						System.out.print("|͞ ");//3
+					} else {
+						System.out.print("͞ ͞ ");
+					}
+				} else if (this.getCell(i,j).PossibleMove(Direction.right)) {
+					if (this.getCell(i,j).PossibleMove(Direction.down)) {
+						System.out.print("_|");//1
+					} else {
+						System.out.print(" |");
+					}
+				} else if (this.getCell(i,j).PossibleMove(Direction.down)) {
+					if (this.getCell(i,j).PossibleMove(Direction.left)) {
+						System.out.print("|_");
+					} else {
+						System.out.print("__");
+					}
+				} else if (this.getCell(i,j).PossibleMove(Direction.left)) {
+					System.out.print("| ");
+				} else {
+					System.out.print("##");
+				}
+			}
+			System.out.println();
+		}
+
+		System.out.println("\n##################################");
+		for (int i = 0; i < 16; i++) {
+			System.out.print("#");
+			for (int j = 0; j < 16; j++) {
+				if (this.getCell(i,j).PossibleMove(Direction.right)) {
+					if (this.getCell(i,j).PossibleMove(Direction.down)) {
+						System.out.print("_|");
+					} else {
+						System.out.print(" |");
+					}
+				} else if (this.getCell(i,j).PossibleMove(Direction.down)) {
+					System.out.print("__");
+				} else {
+					System.out.print("  ");
+				}
+			}
+			System.out.println("#");
+		}
+		System.out.println("##################################");
 	}
 }
