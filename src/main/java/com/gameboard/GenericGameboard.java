@@ -7,5 +7,4 @@ abstract class GenericGameboard {
     abstract GenericGameboard getGameboard();
 
     abstract void display();
-
 }
