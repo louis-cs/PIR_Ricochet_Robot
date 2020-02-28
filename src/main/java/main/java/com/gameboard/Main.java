@@ -6,6 +6,7 @@ public class Main {
 		System.out.println("displaying console gameboard");
 		HighLevelGameboard gameboard=new HighLevelGameboard();
 		gameboard.display();
+		gameboard.displayCollision();
 	}
 }
 

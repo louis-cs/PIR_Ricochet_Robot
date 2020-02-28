@@ -7,6 +7,7 @@ public class HighLevelGameboard extends GenericGameboard {
 
 	private static int max=16;
 	private ArrayList<ArrayList<Cell>> cells;
+	private ArrayList<ArrayList<Boolean>> collision;
 	private ArrayList<Token> robots;
 
 	private Random random = new Random();
@@ -17,7 +18,7 @@ public class HighLevelGameboard extends GenericGameboard {
 
 		placeBorderWalls();
 
-		placeCorners();
+		//placeCorners();
 
 	}
 
@@ -29,16 +30,64 @@ public class HighLevelGameboard extends GenericGameboard {
 		return cells.get(x).get(y);
 	}
 
+	private void addCollision(int x, int y, Direction d){
+		int i,j;
+		/*Up
+		X X X
+		X ͞ ͞ X
+		O O O
+		*/
+		if(d==Direction.up)
+			for(i=x-1; i<=x+1; i++)
+				for(j=y-1; j<=y; j++)
+					if(boundsCheck(i,j))
+						this.collision.get(i).set(j,true);
+		/*Right
+		O X X
+		O  |X
+		O X X
+		*/
+		else if(d==Direction.right)
+			for(i=x; i<=x+1; i++)
+				for(j=y-1; j<=y+1; j++)
+					if(boundsCheck(i,j))
+						this.collision.get(i).set(j,true);
+		/*Down
+		O O O
+		X _ X
+		X X X
+		*/
+		if(d==Direction.down)
+			for(i=x-1; i<=x+1; i++)
+				for(j=y; j<=y+1; j++)
+					if(boundsCheck(i,j))
+						this.collision.get(i).set(j,true);
+		/*Left
+		X X O
+		X|  O
+		X X O
+		*/
+		else if(d==Direction.left)
+			for(i=x-1; i<=x; i++)
+				for(j=y-1; j<=y+1; j++)
+					if(boundsCheck(i,j))
+						this.collision.get(i).set(j,true);
+	}
+
 	private void placeNeighbourWall(int x, int y, Direction d) {
 		switch (d) {
 			case up:
 				if(boundsCheck(x-1,y)) getCell(x - 1, y).addWall(Direction.down);
+				break;
 			case right:
 				if(boundsCheck(x,y+1)) getCell(x, y + 1).addWall(Direction.left);
+				break;
 			case down:
 				if(boundsCheck(x+1,y)) getCell(x + 1, y).addWall(Direction.up);
+				break;
 			case left:
 				if(boundsCheck(x,y-1)) getCell(x, y - 1).addWall(Direction.right);
+				break;
 		}
 	}
 
@@ -46,17 +95,21 @@ public class HighLevelGameboard extends GenericGameboard {
 		if(boundsCheck(x,y)) {
 			getCell(x, y).addWall(d);
 			placeNeighbourWall(x, y, d);
+			addCollision(x, y, d);
 		}
 	}
 
 	private void initBoard(){
 		cells = new ArrayList<>();
+		collision = new ArrayList<>();
 		robots = new ArrayList<>();
 
 		for(int i=0; i<max; i++){
-			cells.add(new ArrayList<Cell>());
+			cells.add(new ArrayList<>());
+			collision.add(new ArrayList<>());
 			for(int j=0; j<max; j++){
 				cells.get(i).add(new Cell());
+				collision.get(i).add(false);
 			}
 		}
 	}
@@ -117,41 +170,40 @@ public class HighLevelGameboard extends GenericGameboard {
 		while(i<nbCoins && j<1000){
 			j++;
 			allCoords[i] = randCoordCorner();
-			if(!collision(allCoords,i)){
+			if(!collision.get(allCoords[i][0]).get(allCoords[i][1])){
+				placeCorner(allCoords[i]);
 				i++;
 			}
 		}
 		nbCoins=i;
 
 		System.out.println("\n" + nbCoins + " Coins:");
-		//PLACEMENT
-		for(i=0; i<nbCoins; i++){
+	}
 
-			int randOrientation = random.nextInt(4);
+	private void placeCorner(int[] coord){
+		int randOrientation = random.nextInt(4);
 
-			System.out.println(allCoords[i][0] + " " + allCoords[i][1] + " orientation " + randOrientation);
+		System.out.println(coord[0] + " " + coord[1] + " orientation " + randOrientation);
 
-			//0 = ͞ |
-			if(randOrientation==0){
-				placeWall(allCoords[i][0],allCoords[i][1], Direction.up);
-				placeWall(allCoords[i][0],allCoords[i][1], Direction.right);
-			}
-			//1 = _|
-			else if(randOrientation==1){
-				placeWall(allCoords[i][0],allCoords[i][1], Direction.right);
-				placeWall(allCoords[i][0],allCoords[i][1], Direction.down);
-			}
-			//2 = |_
-			else if(randOrientation==2){
-				placeWall(allCoords[i][0],allCoords[i][1], Direction.down);
-				placeWall(allCoords[i][0],allCoords[i][1], Direction.left);
-			}
-			//3 = |͞
-			else if(randOrientation==3){
-				placeWall(allCoords[i][0],allCoords[i][1], Direction.left);
-				placeWall(allCoords[i][0],allCoords[i][1], Direction.up);
-			}
-			else System.out.println("error generating random board corners");
+		//0 = ͞ |
+		if(randOrientation==0){
+			placeWall(coord[0],coord[1], Direction.up);
+			placeWall(coord[0],coord[1], Direction.right);
+		}
+		//1 = _|
+		else if(randOrientation==1){
+			placeWall(coord[0],coord[1], Direction.right);
+			placeWall(coord[0],coord[1], Direction.down);
+		}
+		//2 = |_
+		else if(randOrientation==2){
+			placeWall(coord[0],coord[1], Direction.down);
+			placeWall(coord[0],coord[1], Direction.left);
+		}
+		//3 = |͞
+		else if(randOrientation==3){
+			placeWall(coord[0],coord[1], Direction.left);
+			placeWall(coord[0],coord[1], Direction.up);
 		}
 	}
 
@@ -171,20 +223,6 @@ public class HighLevelGameboard extends GenericGameboard {
 		else coords[1] = random.nextInt(max-2) + 1;
 
 		return coords;
-	}
-
-	private boolean collision(int[][] allCoords, int i){
-		boolean collision=false;
-		//System.out.println("check collision de :");
-		//System.out.println(allCoords[i][0] + " " + allCoords[i][1]);
-		for(int j=0; j<i; j++){
-			if(Math.abs(allCoords[j][0] -  allCoords[i][0]) <= 2){
-				if(Math.abs(allCoords[j][1] -  allCoords[i][1]) <= 2){
-					collision=true;
-				}
-			}
-		}
-		return collision;
 	}
 
 	public HighLevelGameboard getGameboard(){
@@ -242,6 +280,23 @@ public class HighLevelGameboard extends GenericGameboard {
 				}
 			}
 			System.out.println("#");
+		}
+		System.out.println("##################################");
+	}
+
+	public void displayCollision(){
+		System.out.println("##################################");
+		for(int i=0; i<max; i++){
+			System.out.print("#");
+			for(int j=0; j<max; j++){
+				if(collision.get(i).get(j)){
+					System.out.print("X ");
+				}
+				else{
+					System.out.print("0 ");
+				}
+			}
+			System.out.print("#\n");
 		}
 		System.out.println("##################################");
 	}
