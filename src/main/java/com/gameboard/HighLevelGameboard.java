@@ -1,14 +1,17 @@
 package com.gameboard;
 
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.Random;
 
 public class HighLevelGameboard extends GenericGameboard {
 
-	private static int max=16;
+	private int max=16;
+	private int nbRobots=4;
 	private ArrayList<ArrayList<Cell>> cells;
 	private ArrayList<ArrayList<Boolean>> collision;
 	private ArrayList<Token> robots;
+	private Token objective;
 
 	private Random random = new Random();
 
@@ -18,8 +21,13 @@ public class HighLevelGameboard extends GenericGameboard {
 
 		placeBorderWalls();
 
-		//placeCorners();
+		placeCorners();
 
+		placeRobots();
+	}
+
+	public HighLevelGameboard getGameboard(){
+		return this;
 	}
 
 	private boolean boundsCheck(int x, int y){
@@ -37,41 +45,45 @@ public class HighLevelGameboard extends GenericGameboard {
 		X ͞ ͞ X
 		O O O
 		*/
-		if(d==Direction.up)
-			for(i=x-1; i<=x+1; i++)
-				for(j=y-1; j<=y; j++)
-					if(boundsCheck(i,j))
-						this.collision.get(i).set(j,true);
+		if(d==Direction.up) {
+			for (i = x - 1; i <= x; i++)
+				for (j = y - 1; j <= y + 1; j++)
+					if (boundsCheck(i, j))
+						this.collision.get(i).set(j, true);
+		}
 		/*Right
 		O X X
 		O  |X
 		O X X
 		*/
-		else if(d==Direction.right)
-			for(i=x; i<=x+1; i++)
-				for(j=y-1; j<=y+1; j++)
-					if(boundsCheck(i,j))
-						this.collision.get(i).set(j,true);
+		else if(d==Direction.right) {
+			for (i = x - 1; i <= x + 1; i++)
+				for (j = y; j <= y + 1; j++)
+					if (boundsCheck(i, j))
+						this.collision.get(i).set(j, true);
+		}
 		/*Down
 		O O O
 		X _ X
 		X X X
 		*/
-		if(d==Direction.down)
-			for(i=x-1; i<=x+1; i++)
-				for(j=y; j<=y+1; j++)
-					if(boundsCheck(i,j))
-						this.collision.get(i).set(j,true);
+		if(d==Direction.down) {
+			for (i = x; i <= x + 1; i++)
+				for (j = y - 1; j <= y + 1; j++)
+					if (boundsCheck(i, j))
+						this.collision.get(i).set(j, true);
+		}
 		/*Left
 		X X O
 		X|  O
 		X X O
 		*/
-		else if(d==Direction.left)
-			for(i=x-1; i<=x; i++)
-				for(j=y-1; j<=y+1; j++)
-					if(boundsCheck(i,j))
-						this.collision.get(i).set(j,true);
+		else if(d==Direction.left) {
+			for (i = x - 1; i <= x + 1; i++)
+				for (j = y - 1; j <= y; j++)
+					if (boundsCheck(i, j))
+						this.collision.get(i).set(j, true);
+		}
 	}
 
 	private void placeNeighbourWall(int x, int y, Direction d) {
@@ -177,6 +189,9 @@ public class HighLevelGameboard extends GenericGameboard {
 		}
 		nbCoins=i;
 
+		//OBJECTIF
+		placeObjective(allCoords[0][0], allCoords[0][1]);
+
 		System.out.println("\n" + nbCoins + " Coins:");
 	}
 
@@ -210,14 +225,17 @@ public class HighLevelGameboard extends GenericGameboard {
 	private int[] randCoordCorner() {
 		int[] coords = new int[2];
 
+		//de 1 à 15
 		coords[0] = random.nextInt(max-2) + 1;
 
 		//éviter le carré central
 		if(coords[0]>=max/2-2 && coords[0]<=max/2+2){
 			//entre 0 et 5  et  5 et 10
 			int r = random.nextInt(max-6);
-			if(r>=max/2-2)
+			if(r>=(max-6)/2)
 				r+=4;//eviter le carré central
+			else
+				r+=1;
 			coords[1]=r;
 		}
 		else coords[1] = random.nextInt(max-2) + 1;
@@ -225,36 +243,71 @@ public class HighLevelGameboard extends GenericGameboard {
 		return coords;
 	}
 
-	public HighLevelGameboard getGameboard(){
-		return this;
+	private Color getColor(int x){
+		Color color;
+		switch(x){
+			case 0:
+				color = Color.RED;
+				break;
+			case 1:
+				color = Color.BLUE;
+				break;
+			case 2:
+				color = Color.GREEN;
+				break;
+			case 3:
+				color = Color.YELLOW;
+				break;
+			default:
+				color = Color.BLACK;
+				break;
+		}
+		return color;
 	}
 
+	private void placeObjective(int x, int y){
+		this.objective = new Token(x,y,getColor(random.nextInt(3)));
+	}
 
-	public void display() {
+	private void placeRobots(){
+		for(int i=0; i<nbRobots; i++){
+			int x,y;
+			x=random.nextInt(max);
+			y=random.nextInt(max-2);
+			//on est dans le carré central
+			if(x==max/2-1 || x==max/2) {
+				if(y>max/2-2)
+					y+=2;
+			}
+			this.robots.add(new Token(x,y,getColor(i)));
+		}
+	}
+
+	public void displayFull() {
 
 		for (int i = 0; i < 16; i++) {
 			for (int j = 0; j < 16; j++) {
-				if (this.getCell(i,j).PossibleMove(Direction.up)) {
-					if (this.getCell(i,j).PossibleMove(Direction.right)) {
+				if (this.getCell(i, j).PossibleMove(Direction.up)) {
+					if (this.getCell(i, j).PossibleMove(Direction.right)) {
 						System.out.print("͞ |");//0
-					} else if (this.getCell(i,j).PossibleMove(Direction.left)) {
+					} else if (this.getCell(i, j).PossibleMove(Direction.left)) {
 						System.out.print("|͞ ");//3
 					} else {
 						System.out.print("͞ ͞ ");
 					}
-				} else if (this.getCell(i,j).PossibleMove(Direction.right)) {
-					if (this.getCell(i,j).PossibleMove(Direction.down)) {
+				} else if (this.getCell(i, j).PossibleMove(Direction.right)) {
+					if (this.getCell(i, j).PossibleMove(Direction.down)) {
 						System.out.print("_|");//1
 					} else {
 						System.out.print(" |");
 					}
-				} else if (this.getCell(i,j).PossibleMove(Direction.down)) {
-					if (this.getCell(i,j).PossibleMove(Direction.left)) {
+				} else if (this.getCell(i, j).PossibleMove(Direction.down)) {
+					if (this.getCell(i, j).PossibleMove(Direction.left)) {
 						System.out.print("|_");
 					} else {
 						System.out.print("__");
 					}
-				} else if (this.getCell(i,j).PossibleMove(Direction.left)) {
+				} else if (this.getCell(i, j).PossibleMove(Direction.left)) {
 					System.out.print("| ");
 				} else {
 					System.out.print("##");
@@ -262,21 +315,48 @@ public class HighLevelGameboard extends GenericGameboard {
 			}
 			System.out.println();
 		}
+	}
 
+	private boolean isThereARobot(int x, int y) {
+		for (int h = 0; h < nbRobots; h++) {
+			if (robots.get(h).getX() == x && robots.get(h).getY() == y) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	public void displayBoard(){
 		System.out.println("\n##################################");
 		for (int i = 0; i < 16; i++) {
 			System.out.print("#");
 			for (int j = 0; j < 16; j++) {
-				if (this.getCell(i,j).PossibleMove(Direction.right)) {
-					if (this.getCell(i,j).PossibleMove(Direction.down)) {
-						System.out.print("_|");
+
+				if(isThereARobot(i,j) || objective.getX()==i && objective.getY()==j){
+					if (this.getCell(i,j).PossibleMove(Direction.right)) {
+						if (this.getCell(i,j).PossibleMove(Direction.down)) {
+							System.out.print("±|");
+						} else {
+							System.out.print("+|");
+						}
+					} else if (this.getCell(i,j).PossibleMove(Direction.down)) {
+						System.out.print("± ");
 					} else {
-						System.out.print(" |");
+						System.out.print("+ ");
 					}
-				} else if (this.getCell(i,j).PossibleMove(Direction.down)) {
-					System.out.print("__");
-				} else {
-					System.out.print("  ");
+				}
+				else {
+					if (this.getCell(i, j).PossibleMove(Direction.right)) {
+						if (this.getCell(i, j).PossibleMove(Direction.down)) {
+							System.out.print("_|");
+						} else {
+							System.out.print(" |");
+						}
+					} else if (this.getCell(i, j).PossibleMove(Direction.down)) {
+						System.out.print("_ ");
+					} else {
+						System.out.print("  ");
+					}
 				}
 			}
 			System.out.println("#");
@@ -293,7 +373,7 @@ public class HighLevelGameboard extends GenericGameboard {
 					System.out.print("X ");
 				}
 				else{
-					System.out.print("0 ");
+					System.out.print("O ");
 				}
 			}
 			System.out.print("#\n");
