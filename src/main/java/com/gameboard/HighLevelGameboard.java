@@ -18,7 +18,7 @@ public class HighLevelGameboard extends GenericGameboard {
 
 		placeBorderWalls();
 
-		//placeCorners();
+		placeCorners();
 
 	}
 
@@ -37,41 +37,45 @@ public class HighLevelGameboard extends GenericGameboard {
 		X ͞ ͞ X
 		O O O
 		*/
-		if(d==Direction.up)
-			for(i=x-1; i<=x+1; i++)
-				for(j=y-1; j<=y; j++)
-					if(boundsCheck(i,j))
-						this.collision.get(i).set(j,true);
+		if(d==Direction.up) {
+			for (i = x - 1; i <= x; i++)
+				for (j = y - 1; j <= y + 1; j++)
+					if (boundsCheck(i, j))
+						this.collision.get(i).set(j, true);
+		}
 		/*Right
 		O X X
 		O  |X
 		O X X
 		*/
-		else if(d==Direction.right)
-			for(i=x; i<=x+1; i++)
-				for(j=y-1; j<=y+1; j++)
-					if(boundsCheck(i,j))
-						this.collision.get(i).set(j,true);
+		else if(d==Direction.right) {
+			for (i = x - 1; i <= x + 1; i++)
+				for (j = y; j <= y + 1; j++)
+					if (boundsCheck(i, j))
+						this.collision.get(i).set(j, true);
+		}
 		/*Down
 		O O O
 		X _ X
 		X X X
 		*/
-		if(d==Direction.down)
-			for(i=x-1; i<=x+1; i++)
-				for(j=y; j<=y+1; j++)
-					if(boundsCheck(i,j))
-						this.collision.get(i).set(j,true);
+		if(d==Direction.down) {
+			for (i = x; i <= x + 1; i++)
+				for (j = y - 1; j <= y + 1; j++)
+					if (boundsCheck(i, j))
+						this.collision.get(i).set(j, true);
+		}
 		/*Left
 		X X O
 		X|  O
 		X X O
 		*/
-		else if(d==Direction.left)
-			for(i=x-1; i<=x; i++)
-				for(j=y-1; j<=y+1; j++)
-					if(boundsCheck(i,j))
-						this.collision.get(i).set(j,true);
+		else if(d==Direction.left) {
+			for (i = x - 1; i <= x + 1; i++)
+				for (j = y - 1; j <= y; j++)
+					if (boundsCheck(i, j))
+						this.collision.get(i).set(j, true);
+		}
 	}
 
 	private void placeNeighbourWall(int x, int y, Direction d) {
@@ -210,14 +214,17 @@ public class HighLevelGameboard extends GenericGameboard {
 	private int[] randCoordCorner() {
 		int[] coords = new int[2];
 
+		//de 1 à 15
 		coords[0] = random.nextInt(max-2) + 1;
 
 		//éviter le carré central
 		if(coords[0]>=max/2-2 && coords[0]<=max/2+2){
 			//entre 0 et 5  et  5 et 10
 			int r = random.nextInt(max-6);
-			if(r>=max/2-2)
+			if(r>=(max-6)/2)
 				r+=4;//eviter le carré central
+			else
+				r+=1;
 			coords[1]=r;
 		}
 		else coords[1] = random.nextInt(max-2) + 1;
@@ -274,7 +281,7 @@ public class HighLevelGameboard extends GenericGameboard {
 						System.out.print(" |");
 					}
 				} else if (this.getCell(i,j).PossibleMove(Direction.down)) {
-					System.out.print("__");
+					System.out.print("_ ");
 				} else {
 					System.out.print("  ");
 				}
@@ -293,7 +300,7 @@ public class HighLevelGameboard extends GenericGameboard {
 					System.out.print("X ");
 				}
 				else{
-					System.out.print("0 ");
+					System.out.print("O ");
 				}
 			}
 			System.out.print("#\n");
