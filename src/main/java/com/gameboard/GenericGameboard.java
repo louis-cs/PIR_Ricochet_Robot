@@ -6,5 +6,5 @@ public abstract class GenericGameboard {
 
     public abstract GenericGameboard getGameboard();
 
-    public abstract void display();
+    public abstract void displayBoard();
 }

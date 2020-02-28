@@ -5,7 +5,7 @@ public class Main {
 	public static void main(String[] args){
 		System.out.println("displaying console gameboard");
 		HighLevelGameboard gameboard=new HighLevelGameboard();
-		gameboard.display();
+		gameboard.displayBoard();
 		//gameboard.displayCollision();
 	}
 }
