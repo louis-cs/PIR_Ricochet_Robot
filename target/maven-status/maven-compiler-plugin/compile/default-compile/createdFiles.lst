@@ -1,1 +1,3 @@
 com\gameboardui\CellUI$1.class
+com\graph\struct\BoardStateHeap.class
+com\graph\struct\BinaryHeap.class

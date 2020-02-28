@@ -7,9 +7,9 @@ import javax.swing.*;
 import java.awt.*;
 
 public class GameUI {
-    private static final int unitSize = 10;
-    private static final int width = 45;
-    private static final int height = 45;
+    private static final int unitSize = 17;
+    private static final int width = 30;
+    private static final int height = 30;
 
     final JFrame top;
     private Insets insets = new Insets(0,0,0,0);

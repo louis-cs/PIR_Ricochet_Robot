@@ -16,17 +16,16 @@ public class CellUI extends JPanel{
      *
      * @param cell a cell model
      */
-    private static final int width = 45;
-    private static final int height = 45;
+    private static final int width = 30;
+    private static final int height = 30;
+
+    private static final int wallThickness = 2;
 
     HashSet<Direction> walls;
 
     CellUI(GenericGameboard gameboard, int i, int j) {
-        //walls = gameboard.getWalls(i,j);
+        walls = gameboard.getWalls(i,j);
 
-        // TEST WALLS
-        walls = new HashSet<>();
-        walls.add(Direction.up);
         initCellUI();
 
         Dimension dim = new Dimension(width, height);
@@ -37,22 +36,23 @@ public class CellUI extends JPanel{
     @Override
     public void paint(Graphics g){
         super.paint(g);
-        g.setColor(Color.red);
+        g.setColor(Color.black);
+
         Iterator iter = walls.iterator();
         while (iter.hasNext()) {
             Direction dir = (Direction)iter.next();
             switch (dir) {
                 case up:
-                    g.drawLine(0, height, width, height);
+                    g.fillRect(0,0,width,wallThickness);
                     break;
                 case down:
-                    g.drawLine(0, 0, width, 0);
+                    g.fillRect(0, height-wallThickness, width, wallThickness);
                     break;
                 case left:
-                    g.drawLine(0, 0, 0, height);
+                    g.fillRect(0, 0, wallThickness, height);
                     break;
                 case right:
-                    g.drawLine(width, 0, width, height);
+                    g.fillRect(width-wallThickness, 0, wallThickness, height);
                     break;
             }
         }
