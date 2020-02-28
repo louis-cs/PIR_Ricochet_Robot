@@ -2,6 +2,7 @@ package com.gameboard;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Random;
 
 public class HighLevelGameboard extends GenericGameboard {
@@ -24,6 +25,22 @@ public class HighLevelGameboard extends GenericGameboard {
 		placeCorners();
 
 		placeRobots();
+	}
+
+	public HashSet<Direction> getWalls(int x, int y){
+		return this.cells.get(x).get(y).getWalls();
+	}
+
+	public ArrayList<Token> getRobots(){
+		return this.robots;
+	}
+
+	public Token getObjective(){
+		return this.objective;
+	}
+
+	public boolean possibleMove(int x, int y, Direction d){
+		return this.cells.get(x).get(y).PossibleMove(d);
 	}
 
 	public HighLevelGameboard getGameboard(){
