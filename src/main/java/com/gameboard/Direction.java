@@ -1,4 +1,4 @@
-package main.java.com.gameboard;
+package com.gameboard;
 
 public enum Direction{
     up ,

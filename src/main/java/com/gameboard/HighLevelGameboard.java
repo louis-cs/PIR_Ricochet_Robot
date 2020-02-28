@@ -1,4 +1,4 @@
-package main.java.com.gameboard;
+package com.gameboard;
 
 import java.util.ArrayList;
 import java.util.Random;

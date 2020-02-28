@@ -1,10 +1,8 @@
-package main.java.com.gameboardui;
+package com.gameboardui;
 
-import main.java.com.gameboard.Cell;
+import com.gameboard.Cell;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import java.awt.*;
 
 public class CellUI extends JTextField{

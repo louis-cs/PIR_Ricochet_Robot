@@ -1,6 +1,4 @@
-package main.java.com.gameboard;
-
-import java.util.Optional;
+package com.gameboard;
 
 public class GameboardInstanceFactory {
     private final static Integer[][] numbers = new Integer[][]{

@@ -1,7 +1,7 @@
-package main.java.com.gameboardui;
+package com.gameboardui;
 
-import main.java.com.gameboard.GenericGameboard;
-import main.java.com.gameboard.HighLevelGameboard;
+import com.gameboard.GenericGameboard;
+import com.gameboard.HighLevelGameboard;
 
 import javax.swing.*;
 import java.awt.*;

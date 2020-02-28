@@ -1,11 +1,11 @@
-main\java\com\gameboard\GenericGameboard.class
-main\java\com\gameboardui\GameUI.class
-main\java\com\gameboard\Main.class
-main\java\com\gameboard\Direction.class
 main\java\com\gameboard\Token.class
 main\java\com\gameboard\Direction$1.class
 main\java\com\gameboardui\CellUI.class
+main\java\com\gameboard\GenericGameboard.class
+main\java\com\gameboardui\GameUI.class
 main\java\com\gameboard\GameboardInstanceFactory.class
 main\java\com\gameboard\HighLevelGameboard$1.class
 main\java\com\gameboard\Cell.class
 main\java\com\gameboard\HighLevelGameboard.class
+main\java\com\gameboard\Main.class
+main\java\com\gameboard\Direction.class
