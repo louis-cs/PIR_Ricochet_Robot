@@ -1,11 +1,15 @@
 package com.gameboardui;
 
 import com.gameboard.Cell;
+import com.gameboard.Direction;
+import com.gameboard.GenericGameboard;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.HashSet;
+import java.util.Iterator;
 
-public class CellUI extends JTextField{
+public class CellUI extends JPanel{
 
     /**
      * create a cell UI
@@ -15,39 +19,49 @@ public class CellUI extends JTextField{
     private static final int width = 45;
     private static final int height = 45;
 
-    CellUI(Cell cell) {
-        initCellUI(cell);
+    HashSet<Direction> walls;
+
+    CellUI(GenericGameboard gameboard, int i, int j) {
+        //walls = gameboard.getWalls(i,j);
+
+        // TEST WALLS
+        walls = new HashSet<>();
+        walls.add(Direction.up);
+        initCellUI();
 
         Dimension dim = new Dimension(width, height);
         this.setMinimumSize(dim);
         this.setPreferredSize(dim);
     }
 
-    /**
-     * Mark this cell UI as active
-     */
-//    public void setActivate() {
-//        setBorder(BorderFactory.createLineBorder(Color.BLACK));
-//        setEditable(true);
-//    }
-
-    /**
-     * Mark this cell UI as inactive
-     */
-    public void setDeactivate() {
-        setBorder(BorderFactory.createLineBorder(Color.RED));
-        setEditable(false);
+    @Override
+    public void paint(Graphics g){
+        super.paint(g);
+        g.setColor(Color.red);
+        Iterator iter = walls.iterator();
+        while (iter.hasNext()) {
+            Direction dir = (Direction)iter.next();
+            switch (dir) {
+                case up:
+                    g.drawLine(0, height, width, height);
+                    break;
+                case down:
+                    g.drawLine(0, 0, width, 0);
+                    break;
+                case left:
+                    g.drawLine(0, 0, 0, height);
+                    break;
+                case right:
+                    g.drawLine(width, 0, width, height);
+                    break;
+            }
+        }
     }
-
 
     /**
      * Initialize this cell UI
-     *
-     * @param cell a cell model
      */
-    private void initCellUI(Cell cell) {
-        setFont(new Font("Times", Font.BOLD, 30));
-        setHorizontalAlignment(JTextField.CENTER);
+    private void initCellUI() {
         setBorder(BorderFactory.createLineBorder(Color.BLACK));
     }
 }

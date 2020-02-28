@@ -52,7 +52,7 @@ public class GameUI {
 
         for (int i=0; i<16; i++) {
             for (int j=0; j<16; j++){
-                CellUI cui = new CellUI(gameboard.getCell(i,j));
+                CellUI cui = new CellUI(gameboard, i,j);
                 cells[i][j] = cui;
                 addComponent(top, cui, j, i, GridBagConstraints.CENTER, GridBagConstraints.BOTH);
             }
