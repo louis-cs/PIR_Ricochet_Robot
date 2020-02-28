@@ -288,13 +288,25 @@ public class HighLevelGameboard extends GenericGameboard {
 
 	private void placeRobots(){
 		for(int i=0; i<nbRobots; i++){
-			int x,y;
-			x=random.nextInt(max);
-			y=random.nextInt(max-2);
-			//on est dans le carré central
-			if(x==max/2-1 || x==max/2) {
-				if(y>max/2-2)
-					y+=2;
+
+			int x = random.nextInt(max);
+			int y = random.nextInt(max);
+			boolean placed = false;
+
+			while(!placed) {
+				//si on est dans le carré central
+				if (x == max / 2 - 1 || x == max / 2) {
+					y = random.nextInt(max - 2);
+					if (y > max / 2 - 2)
+						y += 2;
+				}
+
+				//collision avec l'objectif
+				if(!(x==objective.getX() && y==objective.getY()))
+					placed=true;
+
+				x = random.nextInt(max);
+				y = random.nextInt(max);
 			}
 			this.robots.add(new Token(x,y,getColor(i)));
 		}
