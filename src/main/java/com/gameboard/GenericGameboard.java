@@ -1,4 +1,4 @@
-package main.java.com.gameboard;
+package com.gameboard;
 
 public abstract class GenericGameboard {
 
@@ -6,5 +6,5 @@ public abstract class GenericGameboard {
 
     public abstract GenericGameboard getGameboard();
 
-    public abstract void display();
+    public abstract void displayBoard();
 }

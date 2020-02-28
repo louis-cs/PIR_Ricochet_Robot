@@ -1,4 +1,4 @@
-package main.java.com.gameboard;
+package com.gameboard;
 
 import java.awt.*;
 
@@ -10,6 +10,18 @@ public class Token {
 		this.x=x;
 		this.y=y;
 		this.color=color;
+	}
+
+	public int getX(){
+		return this.x;
+	}
+
+	public int getY(){
+		return this.y;
+	}
+
+	public Color getColor(){
+		return this.color;
 	}
 
 

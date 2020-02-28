@@ -22,7 +22,7 @@
         <artifactId>exec-maven-plugin</artifactId>
         <version>1.2.1</version>
         <configuration>
-          <mainClass>main.java.com.gameboard.Main</mainClass>
+          <mainClass>com.gameboard.Main</mainClass>
         </configuration>
       </plugin>
     </plugins>
