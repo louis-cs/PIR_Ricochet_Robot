@@ -1,11 +1,12 @@
-package main.java.com.gameboard;
+package com.gameboard;
 
+import com.gameboard.GenericGameboard2;
 import jdk.internal.util.xml.impl.Pair;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 
-public class IntGameboard implements GenericGameboard2{
+public class IntGameboard implements GenericGameboard2 {
 
     private int max=16;
 //    private ArrayList<ArrayList<Short>> grid;

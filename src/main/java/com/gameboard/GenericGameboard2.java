@@ -1,4 +1,4 @@
-package main.java.com.gameboard;
+package com.gameboard;
 
 import jdk.internal.util.xml.impl.Pair;
 
