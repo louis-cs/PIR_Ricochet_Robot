@@ -1,5 +1,7 @@
 package com.gameboard;
 
+import com.graph.struct.BoardStateHeap;
+
 public class Main {
 
 	public static void main(String[] args){

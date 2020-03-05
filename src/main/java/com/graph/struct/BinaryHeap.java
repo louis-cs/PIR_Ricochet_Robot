@@ -161,7 +161,11 @@ public class BinaryHeap<E extends Comparable<E>> extends PriorityQueue<E> {
     }
 
     public int find(E x) {
-        return this.array.indexOf(x) ;
+        int result = -1 ;
+        if (!isEmpty()) {
+            result = this.array.indexOf(x);
+        }
+        return result ;
     }
 
     public boolean isValid(int index) {

@@ -2,7 +2,7 @@ package com.graph.struct;
 
 import java.util.ArrayList;
 
-public class BoardStateHeap<Integer extends Comparable<Integer>> extends BinaryHeap<Integer> {
+public class BoardStateHeap<Integer extends Comparable<Integer>> extends BinaryHeap<Integer>  {
 
     private int currentSize;
     private ArrayList<Integer> array;
