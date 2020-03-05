@@ -217,7 +217,7 @@ public class HighLevelGameboard extends GenericGameboard {
 		int i=0, j=0;
 		while(i<nbCoins && j<1000){
 			j++;
-			allCoords.set(i, randCoordCorner());
+			allCoords.add(randCoordCorner());
 			if(!collision.get(allCoords.get(i).getX()).get(allCoords.get(i).getY())){
 				placeCorner(allCoords.get(i));
 				i++;

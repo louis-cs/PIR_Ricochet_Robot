@@ -1,7 +1,9 @@
 package com.gameboardui;
 
+import com.gameboard.Coordinates;
 import com.gameboard.GenericGameboard;
 import com.gameboard.HighLevelGameboard;
+import com.gameboard.Token;
 
 import javax.swing.*;
 import java.awt.*;

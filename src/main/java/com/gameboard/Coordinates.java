@@ -1,6 +1,6 @@
 package com.gameboard;
 
-public class Coordinates {
+public class Coordinates implements Comparable<Coordinates>{
 
 	int x, y;
 
@@ -43,5 +43,15 @@ public class Coordinates {
 				this.y--;
 				break;
 		}
+	}
+
+	@Override
+	public int compareTo(Coordinates coordinates) {
+		int diffX = this.x - coordinates.getX(), diffY = this.y - coordinates.getY();
+
+		if(diffX!=0)//x pas pareil
+			return diffX;
+		else
+			return diffY;
 	}
 }

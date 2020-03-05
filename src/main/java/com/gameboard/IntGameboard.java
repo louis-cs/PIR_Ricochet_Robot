@@ -1,8 +1,5 @@
 package com.gameboard;
 
-import com.gameboard.GenericGameboard2;
-import jdk.internal.util.xml.impl.Pair;
-
 import java.util.ArrayList;
 import java.util.HashSet;
 
