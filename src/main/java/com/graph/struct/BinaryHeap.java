@@ -33,7 +33,7 @@ public class BinaryHeap<E extends Comparable<E>> extends PriorityQueue<E> {
      */
     public BinaryHeap() {
         this.currentSize = 0;
-        this.array = new ArrayList<E>();
+        this.array = new ArrayList<>();
     }
 
     /**
@@ -43,7 +43,7 @@ public class BinaryHeap<E extends Comparable<E>> extends PriorityQueue<E> {
      */
     public BinaryHeap(BinaryHeap<E> heap) {
         this.currentSize = heap.currentSize;
-        this.array = new ArrayList<E>(heap.array);
+        this.array = new ArrayList<>(heap.array);
     }
 
     /**
@@ -148,8 +148,7 @@ public class BinaryHeap<E extends Comparable<E>> extends PriorityQueue<E> {
     public void remove(E x) {
         if (!(this.isEmpty())) {
             //find x
-            int index = -1  ;
-            index = this.find(x) ;
+            int index = this.find(x);
             if (!((index==-1) || (index>this.currentSize-1))) {
                 this.arraySet(index, this.array.get(this.currentSize-1)) ;
                 this.currentSize-- ;
@@ -217,7 +216,7 @@ public class BinaryHeap<E extends Comparable<E>> extends PriorityQueue<E> {
      */
     public void printSorted() {
 
-        BinaryHeap<E> copy = new BinaryHeap<E>(this);
+        BinaryHeap<E> copy = new BinaryHeap<>(this);
 
         System.out.println();
         System.out.println("========  Sorted HEAP  (size = " + this.currentSize + ")  ========");
@@ -234,7 +233,7 @@ public class BinaryHeap<E extends Comparable<E>> extends PriorityQueue<E> {
 
     public void testSorted() {
 
-        BinaryHeap<E> copy = new BinaryHeap<E>(this);
+        BinaryHeap<E> copy = new BinaryHeap<>(this);
 
         while (!copy.isEmpty()) {
             System.out.println(copy.deleteMin());

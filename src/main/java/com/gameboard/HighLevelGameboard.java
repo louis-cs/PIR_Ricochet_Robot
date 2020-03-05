@@ -39,8 +39,27 @@ public class HighLevelGameboard extends GenericGameboard {
 		return this.objective;
 	}
 
-	public boolean possibleMove(int x, int y, Direction d){
-		return this.cells.get(x).get(y).PossibleMove(d);
+	public void makeAllMoves(){
+		for(Token robot : robots){
+			for(Direction d : Direction.values()){
+				moveUntilWall(robot, d);
+			}
+		}
+	}
+
+	public void moveUntilWall(Token robot, Direction d){
+
+		Coordinates c = robot.getCoordinates();
+
+		while(possibleMove(c, d)){
+			c.move(d);
+		}
+
+		robot.setCooordinates(c);
+	}
+
+	public boolean possibleMove(Coordinates c, Direction d){
+		return this.cells.get(c.getX()).get(c.getY()).PossibleMove(d);
 	}
 
 	public HighLevelGameboard getGameboard(){
@@ -192,70 +211,70 @@ public class HighLevelGameboard extends GenericGameboard {
 		//( (max/4)^2)? )
 		int nbCoins = max;
 		System.out.println("nbCoins: " + nbCoins);
-		int[][] allCoords = new int[nbCoins][2];
+		ArrayList<Coordinates> allCoords = new ArrayList<>();
 
 		//CREATION DES COORDONNEES
 		int i=0, j=0;
 		while(i<nbCoins && j<1000){
 			j++;
-			allCoords[i] = randCoordCorner();
-			if(!collision.get(allCoords[i][0]).get(allCoords[i][1])){
-				placeCorner(allCoords[i]);
+			allCoords.set(i, randCoordCorner());
+			if(!collision.get(allCoords.get(i).getX()).get(allCoords.get(i).getY())){
+				placeCorner(allCoords.get(i));
 				i++;
 			}
 		}
 		nbCoins=i;
 
 		//OBJECTIF
-		placeObjective(allCoords[0][0], allCoords[0][1]);
+		placeObjective(allCoords.get(0));
 
 		System.out.println("\n" + nbCoins + " Coins:");
 	}
 
-	private void placeCorner(int[] coord){
+	private void placeCorner(Coordinates coord){
 		int randOrientation = random.nextInt(4);
 
-		System.out.println(coord[0] + " " + coord[1] + " orientation " + randOrientation);
+		System.out.println(coord.getX() + " " + coord.getY() + " orientation " + randOrientation);
 
 		//0 = ͞ |
 		if(randOrientation==0){
-			placeWall(coord[0],coord[1], Direction.up);
-			placeWall(coord[0],coord[1], Direction.right);
+			placeWall(coord.getX(),coord.getY(), Direction.up);
+			placeWall(coord.getX(),coord.getY(), Direction.right);
 		}
 		//1 = _|
 		else if(randOrientation==1){
-			placeWall(coord[0],coord[1], Direction.right);
-			placeWall(coord[0],coord[1], Direction.down);
+			placeWall(coord.getX(),coord.getY(), Direction.right);
+			placeWall(coord.getX(),coord.getY(), Direction.down);
 		}
 		//2 = |_
 		else if(randOrientation==2){
-			placeWall(coord[0],coord[1], Direction.down);
-			placeWall(coord[0],coord[1], Direction.left);
+			placeWall(coord.getX(),coord.getY(), Direction.down);
+			placeWall(coord.getX(),coord.getY(), Direction.left);
 		}
 		//3 = |͞
 		else if(randOrientation==3){
-			placeWall(coord[0],coord[1], Direction.left);
-			placeWall(coord[0],coord[1], Direction.up);
+			placeWall(coord.getX(),coord.getY(), Direction.left);
+			placeWall(coord.getX(),coord.getY(), Direction.up);
 		}
 	}
 
-	private int[] randCoordCorner() {
-		int[] coords = new int[2];
+	private Coordinates randCoordCorner() {
+		Coordinates coords = new Coordinates();
 
 		//de 1 à 15
-		coords[0] = random.nextInt(max-2) + 1;
+		coords.setX(random.nextInt(max-2) + 1);
 
 		//éviter le carré central
-		if(coords[0]>=max/2-2 && coords[0]<=max/2+2){
+		if(coords.getX()>=max/2-2 && coords.getX()<=max/2+2){
 			//entre 0 et 5  et  5 et 10
 			int r = random.nextInt(max-6);
 			if(r>=(max-6)/2)
 				r+=4;//eviter le carré central
 			else
 				r+=1;
-			coords[1]=r;
+			coords.setY(r);
 		}
-		else coords[1] = random.nextInt(max-2) + 1;
+		else coords.setY(random.nextInt(max-2) + 1);
 
 		return coords;
 	}
@@ -282,8 +301,8 @@ public class HighLevelGameboard extends GenericGameboard {
 		return color;
 	}
 
-	private void placeObjective(int x, int y){
-		this.objective = new Token(x,y,getColor(random.nextInt(3)));
+	private void placeObjective(Coordinates c){
+		this.objective = new Token(c, getColor(random.nextInt(3)));
 	}
 
 	private void placeRobots(){
@@ -302,13 +321,13 @@ public class HighLevelGameboard extends GenericGameboard {
 				}
 
 				//collision avec l'objectif
-				if(!(x==objective.getX() && y==objective.getY()))
+				if(!(x==objective.getCoordinates().getX() && y==objective.getCoordinates().getY()))
 					placed=true;
 
 				x = random.nextInt(max);
 				y = random.nextInt(max);
 			}
-			this.robots.add(new Token(x,y,getColor(i)));
+			this.robots.add(new Token(new Coordinates(x, y), getColor(i)));
 		}
 	}
 
@@ -348,7 +367,7 @@ public class HighLevelGameboard extends GenericGameboard {
 
 	private boolean isThereARobot(int x, int y) {
 		for (int h = 0; h < nbRobots; h++) {
-			if (robots.get(h).getX() == x && robots.get(h).getY() == y) {
+			if (robots.get(h).getCoordinates().getX() == x && robots.get(h).getCoordinates().getY() == y) {
 				return true;
 			}
 		}
@@ -361,7 +380,7 @@ public class HighLevelGameboard extends GenericGameboard {
 			System.out.print("#");
 			for (int j = 0; j < 16; j++) {
 
-				if(isThereARobot(i,j) || objective.getX()==i && objective.getY()==j){
+				if(isThereARobot(i,j) || objective.getCoordinates().getX()==i && objective.getCoordinates().getY()==j){
 					if (this.getCell(i,j).PossibleMove(Direction.right)) {
 						if (this.getCell(i,j).PossibleMove(Direction.down)) {
 							System.out.print("±|");
