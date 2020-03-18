@@ -8,7 +8,9 @@ public class Main {
 		System.out.println("displaying console gameboard");
 		HighLevelGameboard gameboard=new HighLevelGameboard();
 		gameboard.displayBoard();
-
+		Token r = gameboard.getRobots().get(0);
+		gameboard.moveUntilWall(r,Direction.left);
+		gameboard.displayBoard();
 
 		Coordinates c1 = new Coordinates(1,2);
 		Coordinates c2 = new Coordinates(2,2);

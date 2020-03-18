@@ -2,7 +2,7 @@ package com.gameboard;
 
 public class Coordinates implements Comparable<Coordinates>{
 
-	int x, y;
+	private int x, y;
 
 	public Coordinates(int x, int y){
 		this.x=x;

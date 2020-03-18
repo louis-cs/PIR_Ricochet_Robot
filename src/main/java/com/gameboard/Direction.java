@@ -6,8 +6,8 @@ public enum Direction{
     down ,
     left;
 
-    public Direction getOppposite(Direction d){
-        switch(d){
+    public Direction getOppposite(){
+        switch(this){
             case up: return down;
             case right: return left;
             case down: return up;

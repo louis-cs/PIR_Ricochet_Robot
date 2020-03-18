@@ -5,8 +5,6 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Random;
 
-import static java.lang.Math.sqrt;
-
 public class HighLevelGameboard extends GenericGameboard {
 
 	private int max=16;
@@ -24,9 +22,14 @@ public class HighLevelGameboard extends GenericGameboard {
 
 		placeBorderWalls();
 
+		//place aussi l'objectif
 		placeCorners();
 
+		//distance to objective
+		calculateDistanceToObjective(objective.getCoordinates(), 0);
+
 		placeRobots();
+
 	}
 
 	public HashSet<Direction> getWalls(int x, int y){
@@ -41,35 +44,53 @@ public class HighLevelGameboard extends GenericGameboard {
 		return this.objective;
 	}
 
-	public void makeAllMoves(){
-		for(Token robot : robots){
-			for(Direction d : Direction.values()){
-				moveUntilWall(robot, d);
-			}
-		}
-	}
-
 	public void moveUntilWall(Token robot, Direction d){
 
 		Coordinates c = robot.getCoordinates();
 
-		while(possibleMove(c, d)){
+		while(boundsCheck(c, d) && !getCell(c).containsWall(d)){
 			c.move(d);
 		}
 
-		robot.setCooordinates(c);
-	}
-
-	public boolean possibleMove(Coordinates c, Direction d){
-		return this.cells.get(c.getX()).get(c.getY()).PossibleMove(d);
+		robot.setCooordinates(c, getCell(c).getDistanceObjective());
 	}
 
 	public HighLevelGameboard getGameboard(){
 		return this;
 	}
 
+	private boolean boundsCheck(Coordinates c, Direction d){
+
+		boolean ret = false;
+
+		switch (d){
+			case up:
+				ret = c.getX()!=0;
+				break;
+			case right:
+				ret = c.getY()!=max-1;
+				break;
+			case down:
+				ret = c.getX()!=max-1;
+				break;
+			case left:
+				ret = c.getY()!=0;
+				break;
+		}
+
+		return ret;
+	}
+
+	private boolean boundsCheck(Coordinates c){
+		return boundsCheck(c.getX(), c.getY());
+	}
+
 	private boolean boundsCheck(int x, int y){
 		return (x>=0 && x<max && y>=0 && y<max);
+	}
+
+	public Cell getCell(Coordinates c) {
+		return cells.get(c.getX()).get(c.getY());
 	}
 
 	public Cell getCell(int x, int y) {
@@ -205,83 +226,6 @@ public class HighLevelGameboard extends GenericGameboard {
 
 	}
 
-    private void placeWalls2(){
-
-	    ArrayList<Integer> possiblePositions = new ArrayList<Integer>();
-	    int j ;
-	    for (j = max; j<(max*(max-1)); j++) {
-            if (j%max != max-1 && j%max != 1) possiblePositions.add(j);
-        }
-        for (j = (max-2)*(max-2); j<(max-2)*(max-2)+4; j++) {
-            possiblePositions.remove(possiblePositions.indexOf(j));
-        }
-        for (j = (max-1)*(max-2); j<(max-1)*(max-2)+4; j++) {
-            possiblePositions.remove(possiblePositions.indexOf(j));
-        }
-        for (j = (max)*(max-2); j<(max)*(max-2)+4; j++) {
-            possiblePositions.remove(possiblePositions.indexOf(j));
-        }
-        for (j = (max+1)*(max-2); j<(max+1)*(max-2)+4; j++) {
-            possiblePositions.remove(possiblePositions.indexOf(j));
-        }
-        int offset1= (max*max)/4-(2*max)-3, offset2= (max*max)/4-(2*max)-3, offset3= (max*max)/4-(2*max)-3, offset4 = (max*max)/4-(2*max)-3 ;
-
-	    //HAUT
-        int r=randMur();
-        placeWall(0,r,Direction.left);
-        possiblePositions.remove(possiblePositions.indexOf(r+max)) ;
-        possiblePositions.remove(possiblePositions.indexOf(r+max-1)) ;
-        offset1 -=2 ;
-        r=randMur();
-        placeWall(0,max-r, Direction.left);
-        possiblePositions.remove(possiblePositions.indexOf(2*max-r-1)) ;
-        possiblePositions.remove(possiblePositions.indexOf(2*max-r-2)) ;
-        offset2 -=2 ;
-
-        //DROITE y=max-1
-        r=randMur();
-        placeWall(r,max-1,Direction.up);
-        possiblePositions.remove(possiblePositions.indexOf(r*max-2)) ;
-        possiblePositions.remove(possiblePositions.indexOf((r-1)*max-2)) ;
-        offset2 -=2 ;
-        r=randMur();
-        placeWall(max-r,max-1,Direction.up);
-        possiblePositions.remove(possiblePositions.indexOf((max-r)*max-2)) ;
-        possiblePositions.remove(possiblePositions.indexOf((max-r-1)*max-2)) ;
-        offset4 -=2 ;
-
-        //BAS x=max-1
-        r=randMur();
-        placeWall(max-1,r, Direction.left);
-        possiblePositions.remove(possiblePositions.indexOf((max-2)*max+r)) ;
-        possiblePositions.remove(possiblePositions.indexOf((max-2)*max+r-1)) ;
-        offset3 -=2 ;
-        r=randMur();
-        placeWall(max-1,max-r, Direction.left);
-        possiblePositions.remove(possiblePositions.indexOf((max-2)*max+max-r)) ;
-        possiblePositions.remove(possiblePositions.indexOf((max-2)*max+max-r-1)) ;
-        offset4 -=2 ;
-
-        //GAUCHE y=0
-        r=randMur();
-        placeWall(r,0,Direction.up);
-        possiblePositions.remove(possiblePositions.indexOf((max*r)+1)) ;
-        possiblePositions.remove(possiblePositions.indexOf(max*(r-1)+1)) ;
-        offset1 -=2 ;
-        r=randMur();
-        placeWall(max-r,0,Direction.up);
-        possiblePositions.remove(possiblePositions.indexOf((max-r)*max+1)) ;
-        possiblePositions.remove(possiblePositions.indexOf((max-r-1)*max+1)) ;
-        offset3 -=2 ;
-    for (int i = 0; i<sqrt(max) ; i++) {
-        int index = random.nextInt(offset1) ;
-        int position = possiblePositions.get(index);
-        //placeCorner(coor);
-    }
-
-	}
-
-
 	// TODO : Function to modify to have an equal number of walls in each quarter of the board.
 	private void placeCorners(){
 		//4-5 coins par quartier du plateau (min 4)
@@ -299,7 +243,6 @@ public class HighLevelGameboard extends GenericGameboard {
 			j++;
 			Coordinates c = randCoordCorner();
 			allCoords.add(c);
-			//System.out.println(c.toString() + " collision:"+ collision.get(c.getX()).get(c.getY()));
 			if(!collision.get(c.getX()).get(c.getY())){
 				placeCorner(c);
 				i++;
@@ -387,6 +330,26 @@ public class HighLevelGameboard extends GenericGameboard {
 		this.objective = new Token(c, getColor(random.nextInt(3)));
 	}
 
+	private void calculateDistanceToObjective(Coordinates c, int distanceToObjective) {
+
+		Cell currentCell = getCell(c);
+		int currentDistance = currentCell.getDistanceObjective();
+
+		//si on a trouvé une meilleure distance
+		if(distanceToObjective<currentDistance) {
+			currentCell.setDistanceObjective(distanceToObjective);
+
+			for(Direction d : Direction.values()) {
+				Coordinates explore = new Coordinates(c.getX(), c.getY());
+				//on continue d'avancer tant qu'il y pas de mur
+				while (boundsCheck(explore, d) && !getCell(explore).containsWall(d)){
+					explore.move(d);
+					calculateDistanceToObjective(explore, distanceToObjective+1);
+				}
+			}
+		}
+	}
+
 	private void placeRobots(){
 		for(int i=0; i<nbRobots; i++){
 
@@ -417,31 +380,45 @@ public class HighLevelGameboard extends GenericGameboard {
 
 		for (int i = 0; i < 16; i++) {
 			for (int j = 0; j < 16; j++) {
-				if (this.getCell(i, j).PossibleMove(Direction.up)) {
-					if (this.getCell(i, j).PossibleMove(Direction.right)) {
+				if (this.getCell(i, j).containsWall(Direction.up)) {
+					if (this.getCell(i, j).containsWall(Direction.right)) {
 						System.out.print("͞ |");//0
-					} else if (this.getCell(i, j).PossibleMove(Direction.left)) {
+					} else if (this.getCell(i, j).containsWall(Direction.left)) {
 						System.out.print("|͞ ");//3
 					} else {
 						System.out.print("͞ ͞ ");
 					}
-				} else if (this.getCell(i, j).PossibleMove(Direction.right)) {
-					if (this.getCell(i, j).PossibleMove(Direction.down)) {
+				} else if (this.getCell(i, j).containsWall(Direction.right)) {
+					if (this.getCell(i, j).containsWall(Direction.down)) {
 						System.out.print("_|");//1
 					} else {
 						System.out.print(" |");
 					}
-				} else if (this.getCell(i, j).PossibleMove(Direction.down)) {
-					if (this.getCell(i, j).PossibleMove(Direction.left)) {
+				} else if (this.getCell(i, j).containsWall(Direction.down)) {
+					if (this.getCell(i, j).containsWall(Direction.left)) {
 						System.out.print("|_");
 					} else {
 						System.out.print("__");
 					}
-				} else if (this.getCell(i, j).PossibleMove(Direction.left)) {
+				} else if (this.getCell(i, j).containsWall(Direction.left)) {
 					System.out.print("| ");
 				} else {
 					System.out.print("##");
 				}
+			}
+			System.out.println();
+		}
+	}
+
+	public void displayDistanceToObjective() {
+
+		for (int i = 0; i < 16; i++) {
+			for (int j = 0; j < 16; j++) {
+				int d = getCell(i,j).getDistanceObjective();
+				if(d==Integer.MAX_VALUE)
+					System.out.print("M ");
+				else
+					System.out.print(d + " ");
 			}
 			System.out.println();
 		}
@@ -463,26 +440,26 @@ public class HighLevelGameboard extends GenericGameboard {
 			for (int j = 0; j < 16; j++) {
 
 				if(isThereARobot(i,j) || objective.getCoordinates().getX()==i && objective.getCoordinates().getY()==j){
-					if (this.getCell(i,j).PossibleMove(Direction.right)) {
-						if (this.getCell(i,j).PossibleMove(Direction.down)) {
+					if (this.getCell(i,j).containsWall(Direction.right)) {
+						if (this.getCell(i,j).containsWall(Direction.down)) {
 							System.out.print("±|");
 						} else {
 							System.out.print("+|");
 						}
-					} else if (this.getCell(i,j).PossibleMove(Direction.down)) {
+					} else if (this.getCell(i,j).containsWall(Direction.down)) {
 						System.out.print("± ");
 					} else {
 						System.out.print("+ ");
 					}
 				}
 				else {
-					if (this.getCell(i, j).PossibleMove(Direction.right)) {
-						if (this.getCell(i, j).PossibleMove(Direction.down)) {
+					if (this.getCell(i, j).containsWall(Direction.right)) {
+						if (this.getCell(i, j).containsWall(Direction.down)) {
 							System.out.print("_|");
 						} else {
 							System.out.print(" |");
 						}
-					} else if (this.getCell(i, j).PossibleMove(Direction.down)) {
+					} else if (this.getCell(i, j).containsWall(Direction.down)) {
 						System.out.print("_ ");
 					} else {
 						System.out.print("  ");
