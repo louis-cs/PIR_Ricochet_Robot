@@ -1,3 +1,14 @@
-D:\Documents\COURS\4IR\PIR\PIR_PROJECT\ricochet-robots-pir\src\main\java\com\gameboard\Main.java
-D:\Documents\COURS\4IR\PIR\PIR_PROJECT\ricochet-robots-pir\src\main\java\com\gameboard\Pion.java
-D:\Documents\COURS\4IR\PIR\PIR_PROJECT\ricochet-robots-pir\src\main\java\com\gameboard\Plateau.java
+C:\Users\charl\Documents\Charles\Informatique\PIR_Ricochet_Robot\src\main\java\com\gameboard\HighLevelGameboard.java
+C:\Users\charl\Documents\Charles\Informatique\PIR_Ricochet_Robot\src\main\java\com\graph\struct\BinaryHeap.java
+C:\Users\charl\Documents\Charles\Informatique\PIR_Ricochet_Robot\src\main\java\com\gameboard\IntGameboard.java
+C:\Users\charl\Documents\Charles\Informatique\PIR_Ricochet_Robot\src\main\java\com\gameboardui\GameUI.java
+C:\Users\charl\Documents\Charles\Informatique\PIR_Ricochet_Robot\src\main\java\com\gameboard\Token.java
+C:\Users\charl\Documents\Charles\Informatique\PIR_Ricochet_Robot\src\main\java\com\graph\struct\BoardStateHeap.java
+C:\Users\charl\Documents\Charles\Informatique\PIR_Ricochet_Robot\src\main\java\com\gameboardui\CellUI.java
+C:\Users\charl\Documents\Charles\Informatique\PIR_Ricochet_Robot\src\main\java\com\gameboard\Coordinates.java
+C:\Users\charl\Documents\Charles\Informatique\PIR_Ricochet_Robot\src\main\java\com\gameboard\GenericGameboard2.java
+C:\Users\charl\Documents\Charles\Informatique\PIR_Ricochet_Robot\src\main\java\com\gameboard\Main.java
+C:\Users\charl\Documents\Charles\Informatique\PIR_Ricochet_Robot\src\main\java\com\graph\struct\TreeSearch.java
+C:\Users\charl\Documents\Charles\Informatique\PIR_Ricochet_Robot\src\main\java\com\gameboard\Cell.java
+C:\Users\charl\Documents\Charles\Informatique\PIR_Ricochet_Robot\src\main\java\com\gameboard\Direction.java
+C:\Users\charl\Documents\Charles\Informatique\PIR_Ricochet_Robot\src\main\java\com\gameboard\GenericGameboard.java

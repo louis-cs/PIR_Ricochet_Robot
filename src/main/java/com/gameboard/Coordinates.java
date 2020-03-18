@@ -54,4 +54,12 @@ public class Coordinates implements Comparable<Coordinates>{
 		else
 			return diffY;
 	}
+
+	@Override
+	public String toString() {
+		return "Coordinates{" +
+				"x=" + x +
+				", y=" + y +
+				'}';
+	}
 }
