@@ -49,12 +49,11 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 	@Override
 	public int compareTo(HighLevelGameboard highLevelGameboard) {
 
-		int depthDiff = depth - highLevelGameboard.getDepth();
-		if(depthDiff!=0)
-			return depthDiff;
+		int distanceDiff = getDistanceToObjective()-highLevelGameboard.getDistanceToObjective();
+		if(distanceDiff!=0)
+			return distanceDiff;
 
-		//si ils ont la meme depth
-		return getDistanceToObjective()-highLevelGameboard.getDistanceToObjective();
+		return depth - highLevelGameboard.getDepth();
 	}
 
 	public int getDistanceToObjective(){
@@ -67,10 +66,6 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 		}
 		assert robot != null;
 		return robot.getDistanceToObjective();
-	}
-
-	public void increaseDepth(){
-		depth++;
 	}
 
 	public int getDepth() {
@@ -126,10 +121,6 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 		}
 
 		return ret;
-	}
-
-	private boolean boundsCheck(Coordinates c){
-		return boundsCheck(c.getX(), c.getY());
 	}
 
 	private boolean boundsCheck(int x, int y){
