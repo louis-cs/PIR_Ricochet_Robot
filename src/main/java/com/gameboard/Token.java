@@ -8,9 +8,14 @@ public class Token implements Comparable<Token>{
 	private Color color;
 	private int distanceToObjective;
 
-	public Token(Coordinates c, Color color){
+	public Token(Coordinates c, Color color, int distanceToObjective){
 		this.c=c;
 		this.color=color;
+		this.distanceToObjective = distanceToObjective;
+	}
+
+	public Token duplicate(){
+		return new Token(c.duplicate(), color, distanceToObjective);
 	}
 
 	public Coordinates getCoordinates(){

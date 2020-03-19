@@ -45,6 +45,10 @@ public class Coordinates implements Comparable<Coordinates>{
 		}
 	}
 
+	public Coordinates duplicate(){
+		return new Coordinates(x, y);
+	}
+
 	@Override
 	public int compareTo(Coordinates coordinates) {
 		int diffX = this.x - coordinates.getX(), diffY = this.y - coordinates.getY();
