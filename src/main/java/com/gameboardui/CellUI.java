@@ -36,7 +36,7 @@ public class CellUI extends JPanel{
     @Override
     public void paint(Graphics g){
         super.paint(g);
-        g.setColor(Color.black);
+        g.setColor(Color.red);
 
         Iterator iter = walls.iterator();
         while (iter.hasNext()) {

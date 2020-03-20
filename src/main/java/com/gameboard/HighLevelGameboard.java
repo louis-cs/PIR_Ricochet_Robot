@@ -24,14 +24,19 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 
 		initBoard();
 
-		placeBorderWalls();
+		//placeBorderWalls();
 
 		//place aussi l'objectif
-		placeCorners();
+		//placeCorners();
 
-		calculateDistanceToObjective(objective.getCoordinates(), 0);
 
+		//calculateDistanceToObjective(objective.getCoordinates(), 0);
+
+
+		createStaticBoard();
 		placeRobots();
+
+
 	}
 
 	public HighLevelGameboard(ArrayList<Token> robots, int depth){
@@ -646,4 +651,53 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 		}
 		System.out.println("##################################");
 	}
+
+	public void createStaticBoard(){
+		placeWall(7,6,Direction.right);
+		placeWall(8,6,Direction.right);
+		placeWall(8,8,Direction.right);
+		placeWall(7,8,Direction.right);
+
+		placeWall(6,7,Direction.down);
+		placeWall(6,8,Direction.down);
+		placeWall(8,7,Direction.down);
+		placeWall(8,8,Direction.down);
+
+
+		placeWall(0,3,Direction.right);
+		placeWall(0,11,Direction.right);
+		placeWall(15,5,Direction.right);
+		placeWall(15,11,Direction.right);
+
+		placeWall(4,0,Direction.down);
+		placeWall(10,0,Direction.down);
+		placeWall(5,15,Direction.down);
+		placeWall(8,15,Direction.down);
+
+
+		placeCorner(new Coordinates(4,2),0);
+		placeCorner(new Coordinates(6,1),3);
+		placeCorner(new Coordinates(2,5),1);
+		placeCorner(new Coordinates(5,7),2);
+
+		placeCorner(new Coordinates(9,1),0);
+		placeCorner(new Coordinates(9,5),3);
+		placeCorner(new Coordinates(14,2),2);
+		placeCorner(new Coordinates(12,6),1);
+
+		placeCorner(new Coordinates(10,8),3);
+		placeCorner(new Coordinates(11,10),1);
+		placeCorner(new Coordinates(10,13),3);
+		placeCorner(new Coordinates(12,14),0);
+		placeCorner(new Coordinates(14,9),0);
+
+		placeCorner(new Coordinates(4,10),2);
+		placeCorner(new Coordinates(2,11),1);
+		placeCorner(new Coordinates(5,12),3);
+		placeCorner(new Coordinates(3,13),0);
+
+
+		placeObjective(new Coordinates(6,1));
+	}
+
 }
