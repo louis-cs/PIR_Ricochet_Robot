@@ -7,7 +7,7 @@ import java.util.Random;
 
 public class HighLevelGameboard extends GenericGameboard implements Comparable<HighLevelGameboard> {
 
-	private static int max=16;
+	public static int max=16;
 	public static int nbRobots=4;
 	private static ArrayList<ArrayList<Cell>> cells;
 	private static ArrayList<ArrayList<Boolean>> collision;
@@ -16,7 +16,7 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 
 	private int depth;
 
-	private Random random = new Random();
+	private static Random random = new Random();
 
 	public HighLevelGameboard(){
 		//treesearch depth
@@ -24,24 +24,28 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 
 		initBoard();
 
-		//placeBorderWalls();
-
-		//place aussi l'objectif
-		//placeCorners();
-
-
-		//calculateDistanceToObjective(objective.getCoordinates(), 0);
-
-
 		createStaticBoard();
+
+		calculateDistanceToObjective(objective.getCoordinates(), 0);
+
 		placeRobots();
-
-
 	}
 
 	public HighLevelGameboard(ArrayList<Token> robots, int depth){
 		this.robots = robots;
 		this.depth = depth;
+	}
+
+	public void genreateRandomGameboard(){
+
+		placeBorderWalls();
+
+		//place aussi l'objectif
+		placeCorners();
+
+		calculateDistanceToObjective(objective.getCoordinates(), 0);
+
+		placeRobots();
 	}
 
 	public HighLevelGameboard duplicate(int depth){
@@ -71,6 +75,10 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 		}
 		assert robot != null;
 		return robot.getDistanceToObjective();
+	}
+
+	public static ArrayList<ArrayList<Boolean>> getCollision() {
+		return collision;
 	}
 
 	public int getDepth() {
@@ -104,6 +112,16 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 
 	public HighLevelGameboard getGameboard(){
 		return this;
+	}
+
+	@Override
+	public void displayBoard() {
+		new DisplayGameboard().displayBoard();
+	}
+
+	@Override
+	public void displayDistanceToObjective() {
+		new DisplayGameboard().displayDistanceToObjective();
 	}
 
 	private boolean boundsCheck(Coordinates c, Direction d){
@@ -422,55 +440,7 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 		}
 	}
 
-	public void displayFull() {
-
-		for (int i = 0; i < 16; i++) {
-			for (int j = 0; j < 16; j++) {
-				if (this.getCell(i, j).containsWall(Direction.up)) {
-					if (this.getCell(i, j).containsWall(Direction.right)) {
-						System.out.print("͞ |");//0
-					} else if (this.getCell(i, j).containsWall(Direction.left)) {
-						System.out.print("|͞ ");//3
-					} else {
-						System.out.print("͞ ͞ ");
-					}
-				} else if (this.getCell(i, j).containsWall(Direction.right)) {
-					if (this.getCell(i, j).containsWall(Direction.down)) {
-						System.out.print("_|");//1
-					} else {
-						System.out.print(" |");
-					}
-				} else if (this.getCell(i, j).containsWall(Direction.down)) {
-					if (this.getCell(i, j).containsWall(Direction.left)) {
-						System.out.print("|_");
-					} else {
-						System.out.print("__");
-					}
-				} else if (this.getCell(i, j).containsWall(Direction.left)) {
-					System.out.print("| ");
-				} else {
-					System.out.print("##");
-				}
-			}
-			System.out.println();
-		}
-	}
-
-	public void displayDistanceToObjective() {
-
-		for (int i = 0; i < 16; i++) {
-			for (int j = 0; j < 16; j++) {
-				int d = getCell(i,j).getDistanceObjective();
-				if(d==Integer.MAX_VALUE)
-					System.out.print("M ");
-				else
-					System.out.print(d + " ");
-			}
-			System.out.println();
-		}
-	}
-
-	private boolean isThereARobot(Coordinates c, Direction d) {
+	public boolean isThereARobot(Coordinates c, Direction d) {
 
 		boolean ret = false;
 
@@ -492,164 +462,13 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 		return ret;
 	}
 
-	private Token isThereARobot(int x, int y) {
+	public Token isThereARobot(int x, int y) {
 		for (Token robot : robots) {
 			if (robot.getCoordinates().getX() == x && robot.getCoordinates().getY() == y) {
 				return robot;
 			}
 		}
 		return null;
-	}
-
-	public void displayBoard(){
-		System.out.println("\n##################################");
-		for (int i = 0; i < 16; i++) {
-			System.out.print("#");
-			for (int j = 0; j < 16; j++) {
-
-				Token robot = isThereARobot(i,j);
-				if(robot!=null) {
-					if (robot.getColor().equals(Color.RED)){
-						if (this.getCell(i,j).containsWall(Direction.right)) {
-							if (this.getCell(i,j).containsWall(Direction.down)) {
-								System.out.print("\uD835\uDD63|");
-							} else {
-								System.out.print("r|");
-							}
-						} else if (this.getCell(i,j).containsWall(Direction.down)) {
-							System.out.print("\uD835\uDD63 ");
-						} else {
-							System.out.print("r ");
-						}
-					}
-					else if (robot.getColor().equals(Color.GREEN)){
-						if (this.getCell(i,j).containsWall(Direction.right)) {
-							if (this.getCell(i,j).containsWall(Direction.down)) {
-								System.out.print("\uD835\uDD58|");
-							} else {
-								System.out.print("g|");
-							}
-						} else if (this.getCell(i,j).containsWall(Direction.down)) {
-							System.out.print("\uD835\uDD58 ");
-						} else {
-							System.out.print("g ");
-						}
-					}
-					else if (robot.getColor().equals(Color.BLUE)){
-						if (this.getCell(i,j).containsWall(Direction.right)) {
-							if (this.getCell(i,j).containsWall(Direction.down)) {
-								System.out.print("\uD835\uDD53|");
-							} else {
-								System.out.print("b|");
-							}
-						} else if (this.getCell(i,j).containsWall(Direction.down)) {
-							System.out.print("\uD835\uDD53 ");
-						} else {
-							System.out.print("b ");
-						}
-					}
-					else if (robot.getColor().equals(Color.YELLOW)){
-						if (this.getCell(i,j).containsWall(Direction.right)) {
-							if (this.getCell(i,j).containsWall(Direction.down)) {
-								System.out.print("\uD835\uDD6A|");
-							} else {
-								System.out.print("y|");
-							}
-						} else if (this.getCell(i,j).containsWall(Direction.down)) {
-							System.out.print("\uD835\uDD6A ");
-						} else {
-							System.out.print("y ");
-						}
-					}
-				}
-				else if(objective.getCoordinates().getX()==i && objective.getCoordinates().getY()==j){
-					if (objective.getColor().equals(Color.RED)){
-						if (this.getCell(i,j).containsWall(Direction.right)) {
-							if (this.getCell(i,j).containsWall(Direction.down)) {
-								System.out.print("ℝ|");
-							} else {
-								System.out.print("R|");
-							}
-						} else if (this.getCell(i,j).containsWall(Direction.down)) {
-							System.out.print("ℝ ");
-						} else {
-							System.out.print("R ");
-						}
-					}
-					else if (objective.getColor().equals(Color.GREEN)){
-						if (this.getCell(i,j).containsWall(Direction.right)) {
-							if (this.getCell(i,j).containsWall(Direction.down)) {
-								System.out.print("\uD835\uDD3E|");
-							} else {
-								System.out.print("G|");
-							}
-						} else if (this.getCell(i,j).containsWall(Direction.down)) {
-							System.out.print("\uD835\uDD3E ");
-						} else {
-							System.out.print("G ");
-						}
-					}
-					else if (objective.getColor().equals(Color.BLUE)){
-						if (this.getCell(i,j).containsWall(Direction.right)) {
-							if (this.getCell(i,j).containsWall(Direction.down)) {
-								System.out.print("\uD835\uDD39|");
-							} else {
-								System.out.print("B|");
-							}
-						} else if (this.getCell(i,j).containsWall(Direction.down)) {
-							System.out.print("\uD835\uDD39 ");
-						} else {
-							System.out.print("B ");
-						}
-					}
-					else if (objective.getColor().equals(Color.YELLOW)){
-						if (this.getCell(i,j).containsWall(Direction.right)) {
-							if (this.getCell(i,j).containsWall(Direction.down)) {
-								System.out.print("\uD835\uDD50|");
-							} else {
-								System.out.print("Y|");
-							}
-						} else if (this.getCell(i,j).containsWall(Direction.down)) {
-							System.out.print("\uD835\uDD50 ");
-						} else {
-							System.out.print("Y ");
-						}
-					}
-				}
-				else {
-					if (this.getCell(i, j).containsWall(Direction.right)) {
-						if (this.getCell(i, j).containsWall(Direction.down)) {
-							System.out.print("_|");
-						} else {
-							System.out.print(" |");
-						}
-					} else if (this.getCell(i, j).containsWall(Direction.down)) {
-						System.out.print("_ ");
-					} else {
-						System.out.print("  ");
-					}
-				}
-			}
-			System.out.println("#");
-		}
-		System.out.println("##################################");
-	}
-
-	public void displayCollision(){
-		System.out.println("##################################");
-		for(int i=0; i<max; i++){
-			System.out.print("#");
-			for(int j=0; j<max; j++){
-				if(collision.get(i).get(j)){
-					System.out.print("X ");
-				}
-				else{
-					System.out.print("O ");
-				}
-			}
-			System.out.print("#\n");
-		}
-		System.out.println("##################################");
 	}
 
 	public void createStaticBoard(){

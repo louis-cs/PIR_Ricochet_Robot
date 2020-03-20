@@ -11,4 +11,6 @@ public abstract class GenericGameboard {
     public abstract void displayBoard();
 
     public abstract HashSet<Direction> getWalls(int x, int y);
+
+	public abstract void displayDistanceToObjective();
 }
