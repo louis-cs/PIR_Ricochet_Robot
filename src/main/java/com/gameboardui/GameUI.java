@@ -35,7 +35,7 @@ public class GameUI {
     public static void main(String[] args) {
         System.out.println("Affichage de gameboard");
         SwingUtilities.invokeLater(() -> {
-            HighLevelGameboard board = new HighLevelGameboard();
+            HighLevelGameboard board = new HighLevelGameboard(false);
             new GameUI(board);
         });
     }
