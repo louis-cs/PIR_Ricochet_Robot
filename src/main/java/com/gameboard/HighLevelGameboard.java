@@ -143,9 +143,10 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 
 		ArrayList<Coordinates> potentialMoves = new ArrayList<>();
 		for(Direction d : Direction.values()){
-			while(boundsCheck(c, d) && !getCell(c).containsWall(d) && !isThereARobot(c, d)) {
-				c.move(d);
-				potentialMoves.add(c);
+			Coordinates path = c.duplicate();
+			while(boundsCheck(path, d) && !getCell(path).containsWall(d) && !isThereARobot(path, d)) {
+				path.move(d);
+				potentialMoves.add(path.duplicate());
 			}
 		}
 		return potentialMoves;
