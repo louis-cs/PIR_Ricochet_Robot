@@ -58,10 +58,8 @@ public class ControllerPaneGUI extends Pane {
             Circle c = new Circle(20, 20, 15, p);
             getChildren().add(c);
         }
-        setOnMousePressed(e -> controller.chooseDirection(new Coordinates(i,j)));
-    }
-
-    public void a(){
-        System.out.println("a");
+        setOnMousePressed(e -> {
+            controller.chooseDirection(new Coordinates(i,j));
+        });
     }
 }

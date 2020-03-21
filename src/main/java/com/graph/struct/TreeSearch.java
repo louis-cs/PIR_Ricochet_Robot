@@ -11,11 +11,12 @@ public class TreeSearch{
 	private static BinaryHeap<HighLevelGameboard> binaryHeap = new BinaryHeap<>();
 
 	private static int maxIter = 200000;
+	private static String message = "";
 
 	/**
 	 * tries to find a solution to a specific game and prints the solution
 	 */
-	public static ArrayList<HighLevelGameboard> search(HighLevelGameboard gameboard) {
+	public static ArrayList<HighLevelGameboard> search(HighLevelGameboard gameboard) { //stopper l'algo quand on arrive à l'objectif
 		binaryHeap.insert(gameboard);
 		ArrayList<HighLevelGameboard> solutionList = new ArrayList<>();
 
@@ -49,12 +50,14 @@ public class TreeSearch{
 				//System.out.println("distanceToObjective: " + board.getRobotSeekingObjective().getDistanceToObjective());
 				solutionList.add(board);
 			}
-			System.out.println("nombre d'iterations: " + x);
-			System.out.print("depth: " + depth);
+			message = "iterations : " + x + "\ndepth : " + depth;
 		}else
-			System.out.println("search failed, depth : " + depth);
+			message = "search failed\ndepth : " + depth;
 
 		return solutionList;
 	}
 
+	public static String getMessage(){
+		return message;
+	}
 }

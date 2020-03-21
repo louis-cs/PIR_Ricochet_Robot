@@ -10,7 +10,7 @@
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
-      <module name="ricochet-robots-pir" target="1.8" />
+      <module name="ricochet-robots-pir" target="9" />
     </bytecodeTargetLevel>
   </component>
 </project>

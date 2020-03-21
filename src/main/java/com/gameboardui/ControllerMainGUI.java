@@ -5,9 +5,11 @@ import com.gameboard.Coordinates;
 import com.gameboard.Direction;
 import com.gameboard.HighLevelGameboard;
 import com.gameboard.Token;
+import com.graph.struct.TreeSearch;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -22,11 +24,18 @@ import java.util.ResourceBundle;
 public class ControllerMainGUI implements Initializable {
     @FXML
     public GridPane gridpaneUI;
+    @FXML
+    public Label textField;
+    @FXML
+    public Label solutionLabel;
 
-    HighLevelGameboard gameboard = new HighLevelGameboard(false);
-    HighLevelGameboard gameboardSave = gameboard.duplicate(0); //pour reset tu re-duplicate la save dans le gameboard
-    ArrayList<Coordinates> highlighted = new ArrayList<>();
-    Token robotHighlighted;
+    private int moves = 0;
+
+    private HighLevelGameboard gameboard = new HighLevelGameboard(true);
+    private ArrayList<HighLevelGameboard> solutionList = new ArrayList<>();
+    private HighLevelGameboard gameboardSave = gameboard.duplicate(0); //pour reset tu re-duplicate la save dans le gameboard
+    private ArrayList<Coordinates> highlighted = new ArrayList<>();
+    private Token robotHighlighted;
 
     /*
     la fonction search te rends une arraylist de gameboards
@@ -82,6 +91,8 @@ public class ControllerMainGUI implements Initializable {
 
             highlighted.clear();
             robotHighlighted = null;
+            moves++;
+            textField.setText(String.valueOf(moves));
         }
 
         //there is a robot
@@ -94,6 +105,30 @@ public class ControllerMainGUI implements Initializable {
     }
 
     public void trouvelasolution() {
-        System.out.println("J'ai trouvé");
+        solutionList = TreeSearch.search(gameboard);
+        solutionLabel.setText(TreeSearch.getMessage());
+    }
+
+    public void reset() {
+        gameboard = gameboardSave.duplicate(0);
+        update();
+        moves=0;
+        textField.setText("0");
+    }
+
+    public void forwardMove() {
+        if(!solutionList.isEmpty()) {
+            textField.setText(String.valueOf(Integer.parseInt(textField.getText())+1));
+            gameboard = solutionList.get(Integer.parseInt(textField.getText()));
+            update();
+        }
+    }
+
+    public void reverseMove() {
+        if(!solutionList.isEmpty()&& Integer.parseInt(textField.getText())>0) {
+            textField.setText(String.valueOf(Integer.parseInt(textField.getText())-1));
+            gameboard = solutionList.get(Integer.parseInt(textField.getText()));
+            update();
+        }
     }
 }
