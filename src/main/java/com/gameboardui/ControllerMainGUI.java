@@ -24,12 +24,13 @@ public class ControllerMainGUI implements Initializable {
     public GridPane gridpaneUI;
 
     HighLevelGameboard gameboard = new HighLevelGameboard(false);
+    HighLevelGameboard gameboardSave = gameboard.duplicate(0); //pour reset tu re-duplicate la save dans le gameboard
     ArrayList<Coordinates> highlighted = new ArrayList<>();
     Token robotHighlighted;
 
-    public ControllerMainGUI() {
-
-    }
+    /*
+    la fonction search te rends une arraylist de gameboards
+     */
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {

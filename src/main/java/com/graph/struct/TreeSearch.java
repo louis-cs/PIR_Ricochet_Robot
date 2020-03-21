@@ -15,8 +15,9 @@ public class TreeSearch{
 	/**
 	 * tries to find a solution to a specific game and prints the solution
 	 */
-	public static void search(HighLevelGameboard gameboard) {
+	public static ArrayList<HighLevelGameboard> search(HighLevelGameboard gameboard) {
 		binaryHeap.insert(gameboard);
+		ArrayList<HighLevelGameboard> solutionList = new ArrayList<>();
 
 		int depth = gameboard.getDepth(), distanceToObjective = Integer.MAX_VALUE, x=0;
 		while (distanceToObjective!=0 && x<maxIter){x++;
@@ -44,12 +45,16 @@ public class TreeSearch{
 			HighLevelGameboard solution = binaryHeap.findMin();
 			for (ArrayList<Token> move : solution.getPreviousMoves()) {
 				HighLevelGameboard board = new HighLevelGameboard(move, 0, solution.getPreviousMoves());
-				board.displayBoard();
-				System.out.println("distanceToObjective: " + board.getRobotSeekingObjective().getDistanceToObjective());
+				//board.displayBoard();
+				//System.out.println("distanceToObjective: " + board.getRobotSeekingObjective().getDistanceToObjective());
+				solutionList.add(board);
 			}
 			System.out.println("nombre d'iterations: " + x);
 			System.out.print("depth: " + depth);
 		}else
 			System.out.println("search failed, depth : " + depth);
+
+		return solutionList;
 	}
+
 }
