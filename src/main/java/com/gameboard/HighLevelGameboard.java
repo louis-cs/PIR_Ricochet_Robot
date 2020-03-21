@@ -139,6 +139,18 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 		return this.previousMoves;
 	}
 
+	public ArrayList<Coordinates> potentialMoves(Coordinates c){
+
+		ArrayList<Coordinates> potentialMoves = new ArrayList<>();
+		for(Direction d : Direction.values()){
+			while(boundsCheck(c, d) && !getCell(c).containsWall(d) && !isThereARobot(c, d)) {
+				c.move(d);
+				potentialMoves.add(c);
+			}
+		}
+		return potentialMoves;
+	}
+
 	/**
 	 * moves a robot until it encounters a wall or another robot
 	 */
