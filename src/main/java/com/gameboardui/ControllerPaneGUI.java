@@ -14,6 +14,9 @@ import javafx.scene.shape.Rectangle;
 public class ControllerPaneGUI extends Pane {
 
     private static ControllerMainGUI controller;
+    private Rectangle r;
+    private Paint pRec, pToken;
+    private Circle c;
 
     ControllerPaneGUI(ControllerMainGUI controllerParam, HighLevelGameboard gameboard, int i, int j, Background background) {
         setBackground(background);
@@ -46,20 +49,38 @@ public class ControllerPaneGUI extends Pane {
         Coordinates objective = gameboard.getObjective().getCoordinates();
         if(objective.getX()==i && objective.getY()==j) {
             java.awt.Color awt = gameboard.getObjective().getColor();
-            Paint p = Color.rgb(awt.getRed(), awt.getGreen(), awt.getBlue());
-            Rectangle r = new Rectangle(38, 38, p);
+            pRec = Color.rgb(awt.getRed(), awt.getGreen(), awt.getBlue());
+            r = new Rectangle(38, 38, pRec);
             getChildren().add(r);
         }
 
         //ROBOT
         Token robot = gameboard.isThereARobot(i, j);
         if (robot != null) {
-            Paint p = Color.rgb(robot.getColor().getRed(), robot.getColor().getGreen(), robot.getColor().getBlue());
-            Circle c = new Circle(20, 20, 15, p);
+            pToken = Color.rgb(robot.getColor().getRed(), robot.getColor().getGreen(), robot.getColor().getBlue());
+            c = new Circle(20, 20, 15, pToken);
             getChildren().add(c);
         }
         setOnMousePressed(e -> {
             controller.chooseDirection(new Coordinates(i,j));
         });
+
+        heightProperty().addListener((obs, oldVal, newVal) -> {
+            update();
+        });
+        widthProperty().addListener((obs, oldVal, newVal) -> {
+            update();
+        });
+    }
+    private void update(){
+        if(r!=null) {
+            r.setWidth(getWidth());
+            r.setHeight(getHeight());
+        }
+        if(c!=null){
+            c.setCenterX(getWidth()/2);
+            c.setCenterY(getHeight()/2);
+            c.setRadius((getHeight()+getWidth())/4);
+        }
     }
 }
