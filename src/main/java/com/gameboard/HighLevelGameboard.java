@@ -25,15 +25,22 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 	 */
 	private int depth;
 
-	private static Random random = new Random(1);
+	private static int seed;
+	private static Random random;
+
+	private static boolean depthFirst = false;
 
 	/**
 	 * initializes the board
 	 * @param randomBoard if true : generates a random board, if false : builds a static board, the same as the board game
+	 * @param seedParam the seed for the Random function that places robots
+	 *             also places walls if randomBoard is true
 	 */
-	public HighLevelGameboard(boolean randomBoard){
+	public HighLevelGameboard(boolean randomBoard, int seedParam){
 		//treesearch depth
 		depth = 0;
+		seed = seedParam;
+		random  = new Random(seed);
 
 		initBoard();
 
@@ -77,7 +84,14 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 
 	@Override
 	public int compareTo(HighLevelGameboard highLevelGameboard) {
-		return distanceFirst(highLevelGameboard);
+		if(depthFirst)
+			return depthFirst(highLevelGameboard);
+		else
+			return distanceFirst(highLevelGameboard);
+	}
+
+	public static void setDepthFirst(boolean depthFirst) {
+		HighLevelGameboard.depthFirst = depthFirst;
 	}
 
 	private int distanceFirst(HighLevelGameboard highLevelGameboard){
@@ -98,6 +112,13 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 		return getDistanceToObjective()-highLevelGameboard.getDistanceToObjective();
 	}
 
+	public static int getSeed() {
+		return seed;
+	}
+
+	public static void setSeed(int seed) {
+		HighLevelGameboard.seed = seed;
+	}
 
 	/**
 	 * returns the value of the heuristic for the robot of the same color as the objective
@@ -565,29 +586,47 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 		placeWall(8,15,Direction.down);
 
 
+		ArrayList<Coordinates> corners = new ArrayList<>();
+		corners.add(new Coordinates(4,2));
 		placeCorner(new Coordinates(4,2),0);
+		corners.add(new Coordinates(6,1));
 		placeCorner(new Coordinates(6,1),3);
+		corners.add(new Coordinates(2,5));
 		placeCorner(new Coordinates(2,5),1);
+		corners.add(new Coordinates(5,7));
 		placeCorner(new Coordinates(5,7),2);
 
+		corners.add(new Coordinates(9,1));
 		placeCorner(new Coordinates(9,1),0);
+		corners.add(new Coordinates(9,5));
 		placeCorner(new Coordinates(9,5),3);
+		corners.add(new Coordinates(14,2));
 		placeCorner(new Coordinates(14,2),2);
+		corners.add(new Coordinates(12,6));
 		placeCorner(new Coordinates(12,6),1);
 
+		corners.add(new Coordinates(10,8));
 		placeCorner(new Coordinates(10,8),3);
+		corners.add(new Coordinates(11,10));
 		placeCorner(new Coordinates(11,10),1);
+		corners.add(new Coordinates(10,13));
 		placeCorner(new Coordinates(10,13),3);
+		corners.add(new Coordinates(12,14));
 		placeCorner(new Coordinates(12,14),0);
+		corners.add(new Coordinates(14,9));
 		placeCorner(new Coordinates(14,9),0);
 
+		corners.add(new Coordinates(4,10));
 		placeCorner(new Coordinates(4,10),2);
+		corners.add(new Coordinates(2,11));
 		placeCorner(new Coordinates(2,11),1);
+		corners.add(new Coordinates(5,12));
 		placeCorner(new Coordinates(5,12),3);
+		corners.add(new Coordinates(3,13));
 		placeCorner(new Coordinates(3,13),0);
 
 
-		placeObjective(new Coordinates(6,1));
+		placeObjective(corners.get(random.nextInt(corners.size())));
 	}
 
 	public void displayFull() {

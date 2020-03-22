@@ -10,18 +10,18 @@ public class TreeSearch{
 
 	private static BinaryHeap<HighLevelGameboard> binaryHeap = new BinaryHeap<>();
 
-	private static int maxIter = 200000;
 	private static String message = "";
 
 	/**
 	 * tries to find a solution to a specific game and prints the solution
 	 */
-	public static ArrayList<HighLevelGameboard> search(HighLevelGameboard gameboard) { //stopper l'algo quand on arrive à l'objectif
+	public ArrayList<HighLevelGameboard> search(HighLevelGameboard gameboard) { //stopper l'algo quand on arrive à l'objectif
 		binaryHeap.insert(gameboard);
 		ArrayList<HighLevelGameboard> solutionList = new ArrayList<>();
 
-		int depth = gameboard.getDepth(), distanceToObjective = Integer.MAX_VALUE, x=0;
-		while (distanceToObjective!=0 && x<maxIter){x++;
+		int depth = gameboard.getDepth(), distanceToObjective = Integer.MAX_VALUE, nbIter=0, maxIter = 200000;
+		while (distanceToObjective!=0 && nbIter< maxIter){
+			nbIter++;
 
 			for (int i = 0; i < HighLevelGameboard.nbRobots; i++) {
 				for (Direction d : Direction.values()) {
@@ -42,7 +42,7 @@ public class TreeSearch{
 			distanceToObjective = binaryHeap.findMin().getDistanceToObjective();
 		}
 
-		if(x<maxIter) {
+		if(nbIter< maxIter) {
 			HighLevelGameboard solution = binaryHeap.findMin();
 			for (ArrayList<Token> move : solution.getPreviousMoves()) {
 				HighLevelGameboard board = new HighLevelGameboard(move, 0, solution.getPreviousMoves());
@@ -50,7 +50,7 @@ public class TreeSearch{
 				//System.out.println("distanceToObjective: " + board.getRobotSeekingObjective().getDistanceToObjective());
 				solutionList.add(board);
 			}
-			message = "iterations : " + x + "\ndepth : " + depth;
+			message = "iterations : " + nbIter + "\ndepth : " + (solutionList.size()-1);
 		}else
 			message = "search failed\ndepth : " + depth;
 

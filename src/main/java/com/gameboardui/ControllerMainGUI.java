@@ -10,6 +10,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -18,6 +21,7 @@ import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 
@@ -25,13 +29,16 @@ public class ControllerMainGUI implements Initializable {
     @FXML
     public GridPane gridpaneUI;
     @FXML
-    public Label textField;
+    public Label stepLabel;
     @FXML
-    public Label solutionLabel;
+    public Label treeSearchLabel;
+    public TextField seedTextField;
 
     private int moves = 0;
+    private Random random = new Random();
+    private int seed = random.nextInt();
 
-    private HighLevelGameboard gameboard = new HighLevelGameboard(true);
+    private HighLevelGameboard gameboard = new HighLevelGameboard(false, seed);
     private ArrayList<HighLevelGameboard> solutionList = new ArrayList<>();
     private HighLevelGameboard gameboardSave = gameboard.duplicate(0); //pour reset tu re-duplicate la save dans le gameboard
     private ArrayList<Coordinates> highlighted = new ArrayList<>();
@@ -43,6 +50,7 @@ public class ControllerMainGUI implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        seedTextField.setText(String.valueOf(seed));
         update();
     }
 
@@ -92,7 +100,7 @@ public class ControllerMainGUI implements Initializable {
             highlighted.clear();
             robotHighlighted = null;
             moves++;
-            textField.setText(String.valueOf(moves));
+            stepLabel.setText(String.valueOf(moves));
         }
 
         //there is a robot
@@ -104,30 +112,53 @@ public class ControllerMainGUI implements Initializable {
         update();
     }
 
-    public void trouvelasolution() {
-        solutionList = TreeSearch.search(gameboard);
-        solutionLabel.setText(TreeSearch.getMessage());
+    public void treeSearch() {
+        TreeSearch t = new TreeSearch();
+        solutionList = t.search(gameboard);
+        treeSearchLabel.setText(TreeSearch.getMessage());
     }
 
     public void reset() {
         gameboard = gameboardSave.duplicate(0);
         update();
         moves=0;
-        textField.setText("0");
+        stepLabel.setText("0");
     }
 
     public void forwardMove() {
-        if(!solutionList.isEmpty()) {
-            textField.setText(String.valueOf(Integer.parseInt(textField.getText())+1));
-            gameboard = solutionList.get(Integer.parseInt(textField.getText()));
+        int move = Integer.parseInt(stepLabel.getText());
+        if(solutionList.size()-1>move) {
+            stepLabel.setText(String.valueOf(move+1));
+            gameboard = solutionList.get(Integer.parseInt(stepLabel.getText()));
             update();
         }
     }
 
     public void reverseMove() {
-        if(!solutionList.isEmpty()&& Integer.parseInt(textField.getText())>0) {
-            textField.setText(String.valueOf(Integer.parseInt(textField.getText())-1));
-            gameboard = solutionList.get(Integer.parseInt(textField.getText()));
+        if(!solutionList.isEmpty()&& Integer.parseInt(stepLabel.getText())>0) {
+            stepLabel.setText(String.valueOf(Integer.parseInt(stepLabel.getText())-1));
+            gameboard = solutionList.get(Integer.parseInt(stepLabel.getText()));
+            update();
+        }
+    }
+
+    public void generateRandom() {
+        seed = random.nextInt();
+        seedTextField.setText(String.valueOf(seed));
+        stepLabel.setText("0");
+        solutionList.clear();
+        treeSearchLabel.setText("");
+        gameboard = new HighLevelGameboard(false, seed);
+        gameboardSave = gameboard.duplicate(0);
+        update();
+    }
+
+    public void seedChanged(KeyEvent keyEvent) {
+        //if user typed ENTER and textfield not empty
+        if(keyEvent.getCode().equals(KeyCode.ENTER) && !seedTextField.getText().equals("")) {
+            seed = Integer.parseInt(seedTextField.getText());
+            gameboard = new HighLevelGameboard(false, seed);
+            gameboardSave = gameboard.duplicate(0);
             update();
         }
     }

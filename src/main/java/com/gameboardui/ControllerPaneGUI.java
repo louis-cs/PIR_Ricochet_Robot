@@ -30,16 +30,16 @@ public class ControllerPaneGUI extends Pane {
         for (Direction d : gameboard.getCell(i, j).getWalls()) {
             switch (d) {
                 case up:
-                    TOP = Color.RED;
+                    TOP = Color.BLACK;
                     break;
                 case right:
-                    RIGHT = Color.RED;
+                    RIGHT = Color.BLACK;
                     break;
                 case down:
-                    BOTTOM = Color.RED;
+                    BOTTOM = Color.BLACK;
                     break;
                 case left:
-                    LEFT = Color.RED;
+                    LEFT = Color.BLACK;
                     break;
             }
         }
@@ -50,7 +50,7 @@ public class ControllerPaneGUI extends Pane {
         if(objective.getX()==i && objective.getY()==j) {
             java.awt.Color awt = gameboard.getObjective().getColor();
             pRec = Color.rgb(awt.getRed(), awt.getGreen(), awt.getBlue());
-            r = new Rectangle(38, 38, pRec);
+            r = new Rectangle(38, 38, pRec);//valeurs inutiles à part la paint
             getChildren().add(r);
         }
 
@@ -58,7 +58,7 @@ public class ControllerPaneGUI extends Pane {
         Token robot = gameboard.isThereARobot(i, j);
         if (robot != null) {
             pToken = Color.rgb(robot.getColor().getRed(), robot.getColor().getGreen(), robot.getColor().getBlue());
-            c = new Circle(20, 20, 15, pToken);
+            c = new Circle(20, 20, 15, pToken);//valeurs inutiles à part la paint
             getChildren().add(c);
         }
         setOnMousePressed(e -> {
@@ -74,13 +74,15 @@ public class ControllerPaneGUI extends Pane {
     }
     private void update(){
         if(r!=null) {
-            r.setWidth(getWidth());
-            r.setHeight(getHeight());
+            r.setWidth(getWidth()-2);
+            r.setHeight(getHeight()-2);
+            r.setX(1);
+            r.setY(1);
         }
         if(c!=null){
             c.setCenterX(getWidth()/2);
             c.setCenterY(getHeight()/2);
-            c.setRadius((getHeight()+getWidth())/4);
+            c.setRadius((getHeight()+getWidth())/4-2);
         }
     }
 }
