@@ -111,15 +111,6 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 
 		return getDistanceToObjective()-highLevelGameboard.getDistanceToObjective();
 	}
-
-	public static int getSeed() {
-		return seed;
-	}
-
-	public static void setSeed(int seed) {
-		HighLevelGameboard.seed = seed;
-	}
-
 	/**
 	 * returns the value of the heuristic for the robot of the same color as the objective
 	 */
@@ -165,7 +156,7 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 		ArrayList<Coordinates> potentialMoves = new ArrayList<>();
 		for(Direction d : Direction.values()){
 			Coordinates path = c.duplicate();
-			while(boundsCheck(path, d) && !getCell(path).containsWall(d) && !isThereARobot(path, d)) {
+			while(boundsCheck(path, d) && !getCell(path).containsWall(d) && isThereARobot(path, d)) {
 				path.move(d);
 				potentialMoves.add(path.duplicate());
 			}
@@ -178,15 +169,15 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 	 */
 	public int moveUntilWall(Token robot, Direction d){
 
-		ArrayList<Token> robotDuplicate = new ArrayList<>();
-		for(Token robot1 : robots)
-			robotDuplicate.add(robot1.duplicate());
-		previousMoves.add(robotDuplicate);
+		ArrayList<Token> robotsDuplicate = new ArrayList<>();
+		for(Token r : robots)
+			robotsDuplicate.add(r.duplicate());
+		previousMoves.add(robotsDuplicate);
 
 		int numberOfMoves = 0;
 		Coordinates c = robot.getCoordinates();
 
-		while(boundsCheck(c, d) && !getCell(c).containsWall(d) && !isThereARobot(c, d)){
+		while(boundsCheck(c, d) && !getCell(c).containsWall(d) && isThereARobot(c, d)){
 			c.move(d);
 			numberOfMoves++;
 		}
@@ -551,7 +542,7 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 				break;
 		}
 
-		return ret;
+		return !ret;
 	}
 
 	public Token isThereARobot(int x, int y) {

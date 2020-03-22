@@ -10,9 +10,12 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -33,6 +36,8 @@ public class ControllerMainGUI implements Initializable {
     @FXML
     public Label treeSearchLabel;
     public TextField seedTextField;
+    public RadioButton depthFirstButton;
+    public RadioButton bestFirstButton;
 
     private Random random = new Random();
     private int seed = random.nextInt();
@@ -49,7 +54,7 @@ public class ControllerMainGUI implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        HighLevelGameboard.setDepthFirst(true);
+        HighLevelGameboard.setDepthFirst(false);
         seedTextField.setText(String.valueOf(seed));
         update();
     }
@@ -112,6 +117,7 @@ public class ControllerMainGUI implements Initializable {
     }
 
     public void treeSearch() {
+        reset();
         TreeSearch t = new TreeSearch();
         solutionList = t.search(gameboard);
         treeSearchLabel.setText(TreeSearch.getMessage());
@@ -127,16 +133,21 @@ public class ControllerMainGUI implements Initializable {
     public void forwardMove() {
         int move = Integer.parseInt(stepLabel.getText());
         if(solutionList.size()-1>move) {
-            stepLabel.setText(String.valueOf(move+1));
-            gameboard = solutionList.get(Integer.parseInt(stepLabel.getText()));
+            move++;
+            stepLabel.setText(String.valueOf(move));
+            gameboard = solutionList.get(move);
+            System.out.println(move);
             update();
         }
     }
 
     public void reverseMove() {
-        if(!solutionList.isEmpty()&& Integer.parseInt(stepLabel.getText())>0) {
-            stepLabel.setText(String.valueOf(Integer.parseInt(stepLabel.getText())-1));
-            gameboard = solutionList.get(Integer.parseInt(stepLabel.getText()));
+        int move = Integer.parseInt(stepLabel.getText());
+        if(!solutionList.isEmpty() && move>0) {
+            move--;
+            stepLabel.setText(String.valueOf(move));
+            gameboard = solutionList.get(move);
+            System.out.println(move);
             update();
         }
     }
@@ -160,5 +171,12 @@ public class ControllerMainGUI implements Initializable {
             gameboardSave = gameboard.duplicate(0);
             update();
         }
+    }
+
+    public void treeSearchModeChanged() {
+        if(depthFirstButton.isSelected())
+            HighLevelGameboard.setDepthFirst(true);
+        else
+            HighLevelGameboard.setDepthFirst(false);
     }
 }
