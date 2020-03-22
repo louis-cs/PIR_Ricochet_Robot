@@ -43,7 +43,7 @@ public class ControllerPaneGUI extends Pane {
                     break;
             }
         }
-        setBorder(new Border(new BorderStroke(TOP, RIGHT, BOTTOM, LEFT, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, new CornerRadii(0), BorderWidths.DEFAULT, new Insets(0, 0, 0, 0))));
+        setBorder(new Border(new BorderStroke(TOP, RIGHT, BOTTOM, LEFT, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, BorderStrokeStyle.SOLID, new CornerRadii(0), BorderWidths.DEFAULT, new Insets(1, 1, 1, 1))));
 
         //OBJECTIVE
         Coordinates objective = gameboard.getObjective().getCoordinates();

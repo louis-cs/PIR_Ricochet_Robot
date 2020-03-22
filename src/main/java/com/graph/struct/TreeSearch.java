@@ -8,7 +8,6 @@ import java.util.ArrayList;
 
 public class TreeSearch{
 
-	private static BinaryHeap<HighLevelGameboard> binaryHeap = new BinaryHeap<>();
 
 	private static String message = "";
 
@@ -16,16 +15,15 @@ public class TreeSearch{
 	 * tries to find a solution to a specific game and prints the solution
 	 */
 	public ArrayList<HighLevelGameboard> search(HighLevelGameboard gameboard) { //stopper l'algo quand on arrive à l'objectif
+		BinaryHeap<HighLevelGameboard> binaryHeap = new BinaryHeap<>();
 		binaryHeap.insert(gameboard);
 		ArrayList<HighLevelGameboard> solutionList = new ArrayList<>();
-
-		int depth = gameboard.getDepth(), distanceToObjective = Integer.MAX_VALUE, nbIter=0, maxIter = 200000;
-		while (distanceToObjective!=0 && nbIter< maxIter){
-			nbIter++;
-
+		long RAM = 0;
+		int depth = gameboard.getDepth(), distanceToObjective = Integer.MAX_VALUE, nbIter=0, maxIter = 200000000;
+		while (distanceToObjective!=0 && nbIter< maxIter && RAM < 3500){
 			for (int i = 0; i < HighLevelGameboard.nbRobots; i++) {
 				for (Direction d : Direction.values()) {
-
+					nbIter++;
 					//il faut le clone autant de fois que de situations
 					HighLevelGameboard gameboardClone = binaryHeap.findMin().duplicate(depth+1);
 
@@ -40,9 +38,10 @@ public class TreeSearch{
 			binaryHeap.deleteMin();
 			depth = binaryHeap.findMin().getDepth();
 			distanceToObjective = binaryHeap.findMin().getDistanceToObjective();
+			RAM = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory())/1000000;
 		}
 
-		if(nbIter< maxIter) {
+		if(nbIter< maxIter && RAM < 3500) {
 			HighLevelGameboard solution = binaryHeap.findMin();
 			for (ArrayList<Token> move : solution.getPreviousMoves()) {
 				HighLevelGameboard board = new HighLevelGameboard(move, 0, solution.getPreviousMoves());

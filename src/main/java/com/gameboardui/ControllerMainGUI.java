@@ -34,7 +34,6 @@ public class ControllerMainGUI implements Initializable {
     public Label treeSearchLabel;
     public TextField seedTextField;
 
-    private int moves = 0;
     private Random random = new Random();
     private int seed = random.nextInt();
 
@@ -50,6 +49,7 @@ public class ControllerMainGUI implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        HighLevelGameboard.setDepthFirst(true);
         seedTextField.setText(String.valueOf(seed));
         update();
     }
@@ -99,8 +99,7 @@ public class ControllerMainGUI implements Initializable {
 
             highlighted.clear();
             robotHighlighted = null;
-            moves++;
-            stepLabel.setText(String.valueOf(moves));
+            stepLabel.setText(String.valueOf(Integer.parseInt(stepLabel.getText())+1));
         }
 
         //there is a robot
@@ -116,12 +115,12 @@ public class ControllerMainGUI implements Initializable {
         TreeSearch t = new TreeSearch();
         solutionList = t.search(gameboard);
         treeSearchLabel.setText(TreeSearch.getMessage());
+        System.gc();
     }
 
     public void reset() {
         gameboard = gameboardSave.duplicate(0);
         update();
-        moves=0;
         stepLabel.setText("0");
     }
 
