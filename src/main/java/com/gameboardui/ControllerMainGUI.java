@@ -9,10 +9,7 @@ import com.graph.struct.TreeSearch;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.*;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -29,15 +26,15 @@ import java.util.ResourceBundle;
 
 
 public class ControllerMainGUI implements Initializable {
-    @FXML
+
     public GridPane gridpaneUI;
-    @FXML
     public Label stepLabel;
-    @FXML
     public Label treeSearchLabel;
     public TextField seedTextField;
     public RadioButton depthFirstButton;
     public RadioButton bestFirstButton;
+    public Button backwardButton;
+    public Button forwardButton;
 
     private Random random = new Random();
     private int seed = random.nextInt();
@@ -118,9 +115,16 @@ public class ControllerMainGUI implements Initializable {
 
     public void treeSearch() {
         reset();
+        backwardButton.setDisable(false);
+        forwardButton.setDisable(false);
         TreeSearch t = new TreeSearch();
         solutionList = t.search(gameboard);
         treeSearchLabel.setText(TreeSearch.getMessage());
+        if(treeSearchLabel.getText().contains("search failed"))
+        {
+            backwardButton.setDisable(true);
+            forwardButton.setDisable(true);
+        }
         System.gc();
     }
 
@@ -153,6 +157,8 @@ public class ControllerMainGUI implements Initializable {
     }
 
     public void generateRandom() {
+        backwardButton.setDisable(true);
+        forwardButton.setDisable(true);
         seed = random.nextInt();
         seedTextField.setText(String.valueOf(seed));
         stepLabel.setText("0");
