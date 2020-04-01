@@ -19,7 +19,7 @@ public class MainGUI extends Application {
         primaryStage.setTitle("Ricochet Robots");
         primaryStage.getIcons().add(new Image("file:icon.jpg"));
         Parent root = FXMLLoader.load(url);
-        primaryStage.setMinWidth(920);
+        primaryStage.setMinWidth(1020);
         primaryStage.setMinHeight(620);
         primaryStage.setScene(new Scene(root));
         primaryStage.show();

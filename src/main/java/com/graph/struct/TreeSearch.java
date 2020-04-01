@@ -10,23 +10,26 @@ public class TreeSearch{
 
 
 	public static String message = "";
-	public static long MAX_RAM = (Runtime.getRuntime().maxMemory()/2/1000000);
+	public static long MAX_RAM = (Runtime.getRuntime().maxMemory()/1000000)/10;
 	public static int depth = 0;
+	public static boolean success = false;
 
 	/**
 	 * tries to find a solution to a specific game and prints the solution
 	 */
 	public ArrayList<HighLevelGameboard> search(HighLevelGameboard gameboard) { //stopper l'algo quand on arrive à l'objectif
+
 		BinaryHeap<HighLevelGameboard> binaryHeap = new BinaryHeap<>();
 		binaryHeap.insert(gameboard);
 		ArrayList<HighLevelGameboard> solutionList = new ArrayList<>();
 		HighLevelGameboard solution = null;
+		depth = gameboard.getDepth();
 
 		long RAM = 0;
-		depth = gameboard.getDepth();
-		int distanceToObjective = Integer.MAX_VALUE, nbIter = 0, maxIter = 200000000;
+		int distanceToObjective = Integer.MAX_VALUE, nbIter = 0;
+
 		LOOP:
-		while (distanceToObjective != 0 && nbIter < maxIter && RAM < MAX_RAM) {
+		while (distanceToObjective != 0 && RAM < MAX_RAM) {
 			for (int i = 0; i < HighLevelGameboard.nbRobots; i++) {
 				for (Direction d : Direction.values()) {
 					nbIter++;
@@ -39,6 +42,7 @@ public class TreeSearch{
 						//win condition
 						if (gameboardClone.getDistanceToObjective() == 0) {
 							solution = gameboardClone;
+							depth = solution.getDepth();
 							break LOOP;
 						}
 						binaryHeap.insert(gameboardClone);
@@ -53,7 +57,7 @@ public class TreeSearch{
 			RAM = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000;
 		}
 
-		if(nbIter< maxIter && RAM < MAX_RAM) {
+		if(RAM < MAX_RAM) {
 			//HighLevelGameboard solution = binaryHeap.findMin();
 			assert solution != null;
 			for (ArrayList<Token> move : solution.getPreviousMoves()) {
@@ -63,11 +67,12 @@ public class TreeSearch{
 				solutionList.add(board);
 			}
 			solutionList.add(solution);
+			//System.out.println("depth:"+depth+" solution size:"+(solutionList.size()-1));
 			depth = solutionList.size()-1;
 			message = "iterations : " + nbIter + "\ndepth : " + depth;
+			success = true;
 		}else {
 			message = "search failed\ndepth : " + depth;
-			depth = -1;
 		}
 		System.gc();
 

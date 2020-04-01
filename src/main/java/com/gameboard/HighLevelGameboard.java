@@ -28,7 +28,7 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 	private static int seed;
 	private static Random random;
 
-	private static boolean depthFirst = false;
+	private static boolean breadthFirst = false;
 
 	/**
 	 * initializes the board
@@ -84,14 +84,14 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 
 	@Override
 	public int compareTo(HighLevelGameboard highLevelGameboard) {
-		if(depthFirst)
-			return depthFirst(highLevelGameboard);
+		if(breadthFirst)
+			return breadthFirst(highLevelGameboard);
 		else
 			return distanceFirst(highLevelGameboard);
 	}
 
-	public static void setDepthFirst(boolean depthFirst) {
-		HighLevelGameboard.depthFirst = depthFirst;
+	public static void setBreadthFirst(boolean breadthFirst) {
+		HighLevelGameboard.breadthFirst = breadthFirst;
 	}
 
 	private int distanceFirst(HighLevelGameboard highLevelGameboard){
@@ -103,7 +103,7 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 		return depth - highLevelGameboard.getDepth();
 	}
 
-	private int depthFirst(HighLevelGameboard highLevelGameboard){
+	private int breadthFirst(HighLevelGameboard highLevelGameboard){
 
 		int depthDiff = depth - highLevelGameboard.getDepth();
 		if(depthDiff!=0)

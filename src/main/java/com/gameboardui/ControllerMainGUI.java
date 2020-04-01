@@ -11,10 +11,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
 import javafx.scene.chart.ScatterChart;
 import javafx.scene.chart.XYChart;
-import javafx.scene.control.Button;
-import javafx.scene.control.Label;
-import javafx.scene.control.RadioButton;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -33,7 +30,7 @@ public class ControllerMainGUI implements Initializable {
     public Label stepLabel;
     public Label label;
     public TextField seedTextField;
-    public RadioButton depthFirstButton;
+    public RadioButton breadthFirstButton;
     public RadioButton bestFirstButton;
     public Button backwardButton;
     public Button forwardButton;
@@ -52,15 +49,15 @@ public class ControllerMainGUI implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        HighLevelGameboard.setDepthFirst(false);
+        HighLevelGameboard.setBreadthFirst(false);
         seedTextField.setText(String.valueOf(seed));
         RamTextField.setText(String.valueOf(TreeSearch.MAX_RAM));
         update();
 
         chart.getXAxis().setAutoRanging(true);
-        chart.getXAxis().setLabel("Time in ms");
+        chart.getXAxis().setLabel("Depth");
         chart.getYAxis().setAutoRanging(true);
-        chart.getYAxis().setLabel("Depth");
+        chart.getYAxis().setLabel("Time in ms");
     }
 
     @FXML
@@ -188,10 +185,10 @@ public class ControllerMainGUI implements Initializable {
     }
 
     public void treeSearchModeChanged() {
-        if(depthFirstButton.isSelected())
-            HighLevelGameboard.setDepthFirst(true);
+        if(breadthFirstButton.isSelected())
+            HighLevelGameboard.setBreadthFirst(true);
         else
-            HighLevelGameboard.setDepthFirst(false);
+            HighLevelGameboard.setBreadthFirst(false);
     }
 
     public void evaluatePerformance() {
@@ -199,12 +196,18 @@ public class ControllerMainGUI implements Initializable {
         TreeSearch t = new TreeSearch();
 
         //---------------------CHART----------------------
-        XYChart.Series<Integer,Integer> series1 = new XYChart.Series<>();
-        if(depthFirstButton.isSelected())
-            series1.setName("Breadth First");
-        else
-            series1.setName("Best First");
+        XYChart.Series<Integer,Integer> series = new XYChart.Series<>();
+        XYChart.Series<Integer,Integer> seriesFailures = new XYChart.Series<>();
+        if(breadthFirstButton.isSelected()) {
+            series.setName("Breadth First");
+            seriesFailures.setName("Breadth First Failures");
+        }
+        else{
+            series.setName("Best First");
+            seriesFailures.setName("Best First Failures");
+        }
 
+        random = new Random(seed);
         for(int i=0; i<nb; i++){
             gameboard = new HighLevelGameboard(false, random.nextInt());
 
@@ -214,22 +217,26 @@ public class ControllerMainGUI implements Initializable {
 
             int time = (int) ((endTime - startTime)/1000000);  //divide by 1000000 to get milliseconds.
             avrgTime += time;
-            if(TreeSearch.depth!=-1) {
+            //success
+            if(TreeSearch.success) {
                 avrgDepth += TreeSearch.depth;
                 succesRate++;
-                series1.getData().add(new XYChart.Data<>(time, TreeSearch.depth));
+                series.getData().add(new XYChart.Data<>(TreeSearch.depth, time));
+            }
+            else{
+                seriesFailures.getData().add(new XYChart.Data<>(TreeSearch.depth, time));
             }
         }
         avrgTime /= nb;
         avrgDepth /= nb;
         succesRate *= 100/nb;
 
-        label.setText("best first average time : "+avrgTime+"ms"+
+        label.setText("average time : "+avrgTime+"ms"+
                 "\naverage depth : "+avrgDepth+
                 "\nsuccess rate : "+succesRate+"%");
         RamTextField.setText(String.valueOf(TreeSearch.MAX_RAM));
 
-        chart.getData().add(series1);
+        chart.getData().add(series);
     }
 
     public void performanceRamChanged() {
@@ -240,5 +247,9 @@ public class ControllerMainGUI implements Initializable {
         else{
             TreeSearch.MAX_RAM = (Runtime.getRuntime().maxMemory()/2/1000000);
         }
+    }
+
+    public void clearGraph() {
+        chart.getData().clear();
     }
 }

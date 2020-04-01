@@ -5,7 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
-<HBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="620.0" prefWidth="920.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gameboardui.ControllerMainGUI">
+<HBox maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="620.0" prefWidth="1020.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.gameboardui.ControllerMainGUI">
     <GridPane fx:id="gridpaneUI" gridLinesVisible="true" onMouseReleased="#update" prefHeight="600.0" prefWidth="600.0" style="-fx-border-color: black;" HBox.hgrow="ALWAYS">
         <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
@@ -44,64 +44,57 @@
             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
     </GridPane>
-    <GridPane hgap="10.0" minWidth="300.0" vgap="10.0">
+    <GridPane hgap="10.0" minWidth="400.0" vgap="10.0">
         <columnConstraints>
-            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
-            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0"/>
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+            <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
-            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES"/>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="TOP" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+         <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="50.0" prefHeight="30.0" valignment="BOTTOM" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
         <padding>
-            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0"/>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
         </padding>
-        <Button mnemonicParsing="false" onMouseReleased="#reset" text="Reset"/>
-        <Button mnemonicParsing="false" onMouseReleased="#generateRandom" text="Generate random"
-                GridPane.columnIndex="1"/>
-        <Label text="Seed" GridPane.rowIndex="1"/>
-        <TextField fx:id="seedTextField" maxWidth="109.0" onKeyReleased="#seedChanged" GridPane.columnIndex="1"
-                   GridPane.rowIndex="1"/>
-        <Button mnemonicParsing="false" onMouseReleased="#treeSearch" text="Tree search" GridPane.rowIndex="2"/>
-        <RadioButton fx:id="bestFirstButton" mnemonicParsing="false" onMouseReleased="#treeSearchModeChanged"
-                     selected="true" text="Best first" GridPane.columnIndex="1" GridPane.rowIndex="2">
+        <Button mnemonicParsing="false" onMouseReleased="#reset" text="Reset" />
+        <Button mnemonicParsing="false" onMouseReleased="#generateRandom" text="Generate random" GridPane.columnIndex="1" />
+        <Label text="Seed" GridPane.rowIndex="1" />
+        <TextField fx:id="seedTextField" maxWidth="109.0" onKeyReleased="#seedChanged" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        <Button mnemonicParsing="false" onMouseReleased="#treeSearch" text="Tree search" GridPane.rowIndex="2" />
+        <RadioButton fx:id="bestFirstButton" mnemonicParsing="false" onMouseReleased="#treeSearchModeChanged" selected="true" text="Best first" GridPane.columnIndex="1" GridPane.rowIndex="2">
             <toggleGroup>
-                <ToggleGroup fx:id="toggleGroup"/>
+                <ToggleGroup fx:id="toggleGroup" />
             </toggleGroup>
         </RadioButton>
-        <Button mnemonicParsing="false" onMouseReleased="#evaluatePerformance" text="Evaluate Performance"
-                GridPane.rowIndex="3"/>
-        <RadioButton fx:id="depthFirstButton" mnemonicParsing="false" onMouseReleased="#treeSearchModeChanged"
-                     text="Depth first" toggleGroup="$toggleGroup" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
-        <Label text="Max amount of RAM" GridPane.rowIndex="4"/>
-        <TextField fx:id="RamTextField" maxWidth="109.0" onKeyReleased="#performanceRamChanged" GridPane.columnIndex="1"
-                   GridPane.rowIndex="4"/>
-        <Label text="Mo " GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4"/>
-        <Label fx:id="label" GridPane.columnSpan="2" GridPane.rowIndex="5"/>
-        <Label text="Step-by-step" GridPane.rowIndex="6"/>
-        <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="6">
-            <Button fx:id="backwardButton" disable="true" mnemonicParsing="false" onMouseReleased="#reverseMove"
-                    text="&lt;"/>
-            <Label fx:id="stepLabel" text="0"/>
-            <Button fx:id="forwardButton" disable="true" mnemonicParsing="false" onMouseReleased="#forwardMove"
-                    text="&gt;"/>
+        <Button mnemonicParsing="false" onMouseReleased="#evaluatePerformance" text="Evaluate Performance" GridPane.rowIndex="3" />
+        <RadioButton fx:id="breadthFirstButton" mnemonicParsing="false" onMouseReleased="#treeSearchModeChanged" text="Depth first" toggleGroup="$toggleGroup" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        <Label text="Max amount of RAM" GridPane.rowIndex="4" />
+        <TextField fx:id="RamTextField" maxWidth="109.0" onKeyReleased="#performanceRamChanged" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        <Label text="                                   Mo" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4" />
+        <Label fx:id="label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+        <Label text="Step-by-step" GridPane.rowIndex="5" />
+        <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
+            <Button fx:id="backwardButton" disable="true" mnemonicParsing="false" onMouseReleased="#reverseMove" text="&lt;" />
+            <Label fx:id="stepLabel" text="0" />
+            <Button fx:id="forwardButton" disable="true" mnemonicParsing="false" onMouseReleased="#forwardMove" text="&gt;" />
         </HBox>
         <ScatterChart fx:id="chart" GridPane.columnSpan="2" GridPane.rowIndex="7" GridPane.rowSpan="3">
             <xAxis>
-                <NumberAxis side="BOTTOM"/>
+                <NumberAxis side="BOTTOM" />
             </xAxis>
             <yAxis>
-                <NumberAxis side="LEFT"/>
+                <NumberAxis side="LEFT" />
             </yAxis>
         </ScatterChart>
+      <Button mnemonicParsing="false" onAction="#clearGraph" text="Clear Graph" GridPane.rowIndex="6" />
     </GridPane>
    <padding>
       <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
