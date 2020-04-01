@@ -9,7 +9,9 @@ import java.util.ArrayList;
 public class TreeSearch{
 
 
-	private static String message = "";
+	public static String message = "";
+	public static long MAX_RAM = (Runtime.getRuntime().maxMemory()/2/1000000);
+	public static int depth = 0;
 
 	/**
 	 * tries to find a solution to a specific game and prints the solution
@@ -21,9 +23,10 @@ public class TreeSearch{
 		HighLevelGameboard solution = null;
 
 		long RAM = 0;
-		int depth = gameboard.getDepth(), distanceToObjective = Integer.MAX_VALUE, nbIter = 0, maxIter = 200000000;
+		depth = gameboard.getDepth();
+		int distanceToObjective = Integer.MAX_VALUE, nbIter = 0, maxIter = 200000000;
 		LOOP:
-		while (distanceToObjective != 0 && nbIter < maxIter && RAM < 3500) {
+		while (distanceToObjective != 0 && nbIter < maxIter && RAM < MAX_RAM) {
 			for (int i = 0; i < HighLevelGameboard.nbRobots; i++) {
 				for (Direction d : Direction.values()) {
 					nbIter++;
@@ -50,7 +53,7 @@ public class TreeSearch{
 			RAM = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000;
 		}
 
-		if(nbIter< maxIter && RAM < 3500) {
+		if(nbIter< maxIter && RAM < MAX_RAM) {
 			//HighLevelGameboard solution = binaryHeap.findMin();
 			assert solution != null;
 			for (ArrayList<Token> move : solution.getPreviousMoves()) {
@@ -60,14 +63,14 @@ public class TreeSearch{
 				solutionList.add(board);
 			}
 			solutionList.add(solution);
-			message = "iterations : " + nbIter + "\ndepth : " + (solutionList.size()-1);
-		}else
+			depth = solutionList.size()-1;
+			message = "iterations : " + nbIter + "\ndepth : " + depth;
+		}else {
 			message = "search failed\ndepth : " + depth;
+			depth = -1;
+		}
+		System.gc();
 
 		return solutionList;
-	}
-
-	public static String getMessage(){
-		return message;
 	}
 }

@@ -9,10 +9,12 @@ import com.graph.struct.TreeSearch;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Insets;
-import javafx.scene.control.*;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
+import javafx.scene.chart.ScatterChart;
+import javafx.scene.chart.XYChart;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.control.RadioButton;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.CornerRadii;
@@ -29,12 +31,14 @@ public class ControllerMainGUI implements Initializable {
 
     public GridPane gridpaneUI;
     public Label stepLabel;
-    public Label treeSearchLabel;
+    public Label label;
     public TextField seedTextField;
     public RadioButton depthFirstButton;
     public RadioButton bestFirstButton;
     public Button backwardButton;
     public Button forwardButton;
+    public TextField RamTextField;
+    public ScatterChart<Integer,Integer> chart;
 
     private Random random = new Random();
     private int seed = random.nextInt();
@@ -45,15 +49,18 @@ public class ControllerMainGUI implements Initializable {
     private ArrayList<Coordinates> highlighted = new ArrayList<>();
     private Token robotHighlighted;
 
-    /*
-    la fonction search te rends une arraylist de gameboards
-     */
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         HighLevelGameboard.setDepthFirst(false);
         seedTextField.setText(String.valueOf(seed));
+        RamTextField.setText(String.valueOf(TreeSearch.MAX_RAM));
         update();
+
+        chart.getXAxis().setAutoRanging(true);
+        chart.getXAxis().setLabel("Time in ms");
+        chart.getYAxis().setAutoRanging(true);
+        chart.getYAxis().setLabel("Depth");
     }
 
     @FXML
@@ -114,18 +121,18 @@ public class ControllerMainGUI implements Initializable {
     }
 
     public void treeSearch() {
+        seedTextField.setText(String.valueOf(seed));
         reset();
         backwardButton.setDisable(false);
         forwardButton.setDisable(false);
         TreeSearch t = new TreeSearch();
         solutionList = t.search(gameboard);
-        treeSearchLabel.setText(TreeSearch.getMessage());
-        if(treeSearchLabel.getText().contains("search failed"))
+        label.setText(TreeSearch.message);
+        if(label.getText().contains("search failed"))
         {
             backwardButton.setDisable(true);
             forwardButton.setDisable(true);
         }
-        System.gc();
     }
 
     public void reset() {
@@ -140,7 +147,6 @@ public class ControllerMainGUI implements Initializable {
             move++;
             stepLabel.setText(String.valueOf(move));
             gameboard = solutionList.get(move);
-            System.out.println(move);
             update();
         }
     }
@@ -151,7 +157,6 @@ public class ControllerMainGUI implements Initializable {
             move--;
             stepLabel.setText(String.valueOf(move));
             gameboard = solutionList.get(move);
-            System.out.println(move);
             update();
         }
     }
@@ -163,19 +168,22 @@ public class ControllerMainGUI implements Initializable {
         seedTextField.setText(String.valueOf(seed));
         stepLabel.setText("0");
         solutionList.clear();
-        treeSearchLabel.setText("");
+        label.setText("");
         gameboard = new HighLevelGameboard(false, seed);
         gameboardSave = gameboard.duplicate(0);
         update();
     }
 
-    public void seedChanged(KeyEvent keyEvent) {
-        //if user typed ENTER and textfield not empty
-        if(keyEvent.getCode().equals(KeyCode.ENTER) && !seedTextField.getText().equals("")) {
-            seed = Integer.parseInt(seedTextField.getText());
+    public void seedChanged() {
+        String text = seedTextField.getText();
+        if(!text.equals("")) {
+            seed = Integer.parseInt(text);
             gameboard = new HighLevelGameboard(false, seed);
             gameboardSave = gameboard.duplicate(0);
             update();
+        }
+        else{
+            seed = random.nextInt();
         }
     }
 
@@ -184,5 +192,53 @@ public class ControllerMainGUI implements Initializable {
             HighLevelGameboard.setDepthFirst(true);
         else
             HighLevelGameboard.setDepthFirst(false);
+    }
+
+    public void evaluatePerformance() {
+        int avrgDepth=0, succesRate=0, nb=20, avrgTime = 0;
+        TreeSearch t = new TreeSearch();
+
+        //---------------------CHART----------------------
+        XYChart.Series<Integer,Integer> series1 = new XYChart.Series<>();
+        if(depthFirstButton.isSelected())
+            series1.setName("Breadth First");
+        else
+            series1.setName("Best First");
+
+        for(int i=0; i<nb; i++){
+            gameboard = new HighLevelGameboard(false, random.nextInt());
+
+            long startTime = System.nanoTime();
+            t.search(gameboard);
+            long endTime = System.nanoTime();
+
+            int time = (int) ((endTime - startTime)/1000000);  //divide by 1000000 to get milliseconds.
+            avrgTime += time;
+            if(TreeSearch.depth!=-1) {
+                avrgDepth += TreeSearch.depth;
+                succesRate++;
+                series1.getData().add(new XYChart.Data<>(time, TreeSearch.depth));
+            }
+        }
+        avrgTime /= nb;
+        avrgDepth /= nb;
+        succesRate *= 100/nb;
+
+        label.setText("best first average time : "+avrgTime+"ms"+
+                "\naverage depth : "+avrgDepth+
+                "\nsuccess rate : "+succesRate+"%");
+        RamTextField.setText(String.valueOf(TreeSearch.MAX_RAM));
+
+        chart.getData().add(series1);
+    }
+
+    public void performanceRamChanged() {
+        String text = RamTextField.getText();
+        if(!text.equals("")) {
+            TreeSearch.MAX_RAM = Integer.parseInt(text);
+        }
+        else{
+            TreeSearch.MAX_RAM = (Runtime.getRuntime().maxMemory()/2/1000000);
+        }
     }
 }
