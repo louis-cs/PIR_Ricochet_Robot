@@ -36,6 +36,9 @@ public class ControllerMainGUI implements Initializable {
     public Button forwardButton;
     public TextField RamTextField;
     public ScatterChart<Integer,Integer> chart;
+    public ToggleGroup toggleGroup;
+    public RadioButton AStarButton;
+    public RadioButton MonteCarloButton;
 
     private Random random = new Random();
     private int seed = random.nextInt();
@@ -49,7 +52,7 @@ public class ControllerMainGUI implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        HighLevelGameboard.setBreadthFirst(false);
+        HighLevelGameboard.solvingMethod = HighLevelGameboard.solvingMethods.breadthFirst;
         seedTextField.setText(String.valueOf(seed));
         RamTextField.setText(String.valueOf(TreeSearch.MAX_RAM));
         update();
@@ -186,9 +189,13 @@ public class ControllerMainGUI implements Initializable {
 
     public void treeSearchModeChanged() {
         if(breadthFirstButton.isSelected())
-            HighLevelGameboard.setBreadthFirst(true);
+            HighLevelGameboard.solvingMethod = HighLevelGameboard.solvingMethods.breadthFirst;
+        else if(bestFirstButton.isSelected())
+            HighLevelGameboard.solvingMethod = HighLevelGameboard.solvingMethods.bestFirst;
+        else if(AStarButton.isSelected())
+            HighLevelGameboard.solvingMethod = HighLevelGameboard.solvingMethods.AStar;
         else
-            HighLevelGameboard.setBreadthFirst(false);
+            HighLevelGameboard.solvingMethod = HighLevelGameboard.solvingMethods.MonteCarlo;
     }
 
     public void evaluatePerformance() {
@@ -202,9 +209,17 @@ public class ControllerMainGUI implements Initializable {
             series.setName("Breadth First");
             seriesFailures.setName("Breadth First Failures");
         }
-        else{
+        else if(bestFirstButton.isSelected()){
             series.setName("Best First");
             seriesFailures.setName("Best First Failures");
+        }
+        else if(AStarButton.isSelected()) {
+            series.setName("A*");
+            seriesFailures.setName("A* Failures");
+        }
+        else {
+            series.setName("Monte Carlo");
+            seriesFailures.setName("Monte Carlo Failures");
         }
 
         random = new Random(seed);

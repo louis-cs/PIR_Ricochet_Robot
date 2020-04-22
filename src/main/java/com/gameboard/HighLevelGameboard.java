@@ -23,12 +23,12 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 	/**
 	 * number of moves -or- the depth of the tree search
 	 */
-	private int depth;
+	private final int depth;
 
-	private static int seed;
 	private static Random random;
 
-	private static boolean breadthFirst = false;
+	public enum solvingMethods{breadthFirst, bestFirst, AStar, MonteCarlo}
+	public static solvingMethods solvingMethod = solvingMethods.breadthFirst;
 
 	/**
 	 * initializes the board
@@ -39,8 +39,7 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 	public HighLevelGameboard(boolean randomBoard, int seedParam){
 		//treesearch depth
 		depth = 0;
-		seed = seedParam;
-		random  = new Random(seed);
+		random  = new Random(seedParam);
 
 		initBoard();
 
@@ -84,14 +83,14 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 
 	@Override
 	public int compareTo(HighLevelGameboard highLevelGameboard) {
-		if(breadthFirst)
+		if(solvingMethod == solvingMethods.breadthFirst)
 			return breadthFirst(highLevelGameboard);
-		else
+		else if(solvingMethod == solvingMethods.bestFirst)
 			return distanceFirst(highLevelGameboard);
-	}
-
-	public static void setBreadthFirst(boolean breadthFirst) {
-		HighLevelGameboard.breadthFirst = breadthFirst;
+		else if(solvingMethod == solvingMethods.AStar)
+			return AStar(highLevelGameboard);
+		else
+			return MonteCarlo(highLevelGameboard);
 	}
 
 	private int distanceFirst(HighLevelGameboard highLevelGameboard){
@@ -110,6 +109,22 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 			return depthDiff;
 
 		return getDistanceToObjective()-highLevelGameboard.getDistanceToObjective();
+	}
+
+	private int AStar(HighLevelGameboard highLevelGameboard){
+
+		int distanceDiff = getDistanceToObjective()-highLevelGameboard.getDistanceToObjective();
+		int depthDiff = depth - highLevelGameboard.getDepth();
+
+		return distanceDiff + depthDiff;
+	}
+
+	private int MonteCarlo(HighLevelGameboard highLevelGameboard){
+
+		int distanceDiff = getDistanceToObjective()-highLevelGameboard.getDistanceToObjective();
+		int depthDiff = depth - highLevelGameboard.getDepth();
+
+		return distanceDiff + depthDiff;
 	}
 	/**
 	 * returns the value of the heuristic for the robot of the same color as the objective

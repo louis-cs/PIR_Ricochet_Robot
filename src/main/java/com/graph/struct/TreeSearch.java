@@ -73,6 +73,7 @@ public class TreeSearch{
 			success = true;
 		}else {
 			message = "search failed\ndepth : " + depth;
+			success = false;
 		}
 		System.gc();
 

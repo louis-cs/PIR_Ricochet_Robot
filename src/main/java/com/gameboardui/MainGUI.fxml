@@ -69,16 +69,20 @@
         <Label text="Seed" GridPane.rowIndex="1" />
         <TextField fx:id="seedTextField" maxWidth="109.0" onKeyReleased="#seedChanged" GridPane.columnIndex="1" GridPane.rowIndex="1" />
         <Button mnemonicParsing="false" onMouseReleased="#treeSearch" text="Tree search" GridPane.rowIndex="2" />
-        <RadioButton fx:id="bestFirstButton" mnemonicParsing="false" onMouseReleased="#treeSearchModeChanged" selected="true" text="Best first" GridPane.columnIndex="1" GridPane.rowIndex="2">
-            <toggleGroup>
-                <ToggleGroup fx:id="toggleGroup" />
-            </toggleGroup>
-        </RadioButton>
+        <VBox spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="2" GridPane.rowSpan="2">
+            <RadioButton fx:id="bestFirstButton" mnemonicParsing="false" onMouseReleased="#treeSearchModeChanged" selected="true" text="Best first">
+                <toggleGroup>
+                    <ToggleGroup fx:id="toggleGroup" />
+                </toggleGroup>
+            </RadioButton>
+            <RadioButton fx:id="breadthFirstButton" mnemonicParsing="false" onMouseReleased="#treeSearchModeChanged" text="Breadth first" toggleGroup="$toggleGroup" />
+            <RadioButton fx:id="AStarButton" mnemonicParsing="false" onMouseReleased="#treeSearchModeChanged" text="A*" toggleGroup="$toggleGroup" />
+            <RadioButton fx:id="MonteCarloButton" mnemonicParsing="false" onMouseReleased="#treeSearchModeChanged" text="Monte Carlo" toggleGroup="$toggleGroup" />
+        </VBox>
         <Button mnemonicParsing="false" onMouseReleased="#evaluatePerformance" text="Evaluate Performance" GridPane.rowIndex="3" />
-        <RadioButton fx:id="breadthFirstButton" mnemonicParsing="false" onMouseReleased="#treeSearchModeChanged" text="Depth first" toggleGroup="$toggleGroup" GridPane.columnIndex="1" GridPane.rowIndex="3" />
         <Label text="Max amount of RAM" GridPane.rowIndex="4" />
         <TextField fx:id="RamTextField" maxWidth="109.0" onKeyReleased="#performanceRamChanged" GridPane.columnIndex="1" GridPane.rowIndex="4" />
-        <Label text="                                   Mo" GridPane.columnIndex="1" GridPane.halignment="LEFT" GridPane.rowIndex="4" />
+        <Label text="Mo                " GridPane.columnIndex="1" GridPane.halignment="RIGHT" GridPane.rowIndex="4" />
         <Label fx:id="label" GridPane.columnIndex="1" GridPane.rowIndex="6" />
         <Label text="Step-by-step" GridPane.rowIndex="5" />
         <HBox alignment="CENTER_LEFT" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="5">
