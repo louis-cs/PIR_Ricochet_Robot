@@ -83,9 +83,8 @@ public class TreeSearch{
 
 	public HighLevelGameboard findNextMove(HighLevelGameboard gameboard) {
 
-		Tree tree = new Tree();
+		Tree tree = new Tree(gameboard);
 		Node rootNode = tree.getRoot();
-		rootNode.getState().setGameboard(gameboard);
 
 		long RAM = 0;
 		while (RAM < MAX_RAM) {
@@ -98,7 +97,7 @@ public class TreeSearch{
 				nodeToExplore = promisingNode.getRandomChildNode();
 			}
 			int playoutResult = simulateRandomPlayout(nodeToExplore);
-			backPropogation(nodeToExplore);
+			backPropogation(nodeToExplore, playoutResult);
 
 			RAM = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000;
 		}
@@ -125,10 +124,11 @@ public class TreeSearch{
 		});
 	}
 
-	private void backPropogation(Node nodeToExplore) {
+	private void backPropogation(Node nodeToExplore, int playoutResult) {
 		Node tempNode = nodeToExplore;
 		while (tempNode != null) {
 			tempNode.getState().incrementVisit();
+			tempNode.getState().addScore(playoutResult);
 			tempNode = tempNode.getParent();
 		}
 	}

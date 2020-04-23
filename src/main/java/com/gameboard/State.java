@@ -5,8 +5,10 @@ import java.util.List;
 import java.util.Random;
 
 public class State {
-	HighLevelGameboard gameboard;
-	int visitCount;
+
+	private HighLevelGameboard gameboard;
+	private int visitCount;
+	private int playoutsResult;
 
 	private static final Random random = new Random();
 
@@ -16,14 +18,19 @@ public class State {
 
 	public void setGameboard(HighLevelGameboard gameboard) {
 		this.gameboard = gameboard;
+		this.playoutsResult = -gameboard.getDistanceToObjective();
 	}
 
 	public void setVisitCount(int visitCount) {
 		this.visitCount = visitCount;
 	}
 
+	public void addScore(int playoutResult) {
+		this.playoutsResult -= playoutResult;
+	}
+
 	public double getWinScore() {
-		return -gameboard.getDistanceToObjective();
+		return playoutsResult;
 	}
 
 	public int getVisitCount() {
@@ -39,8 +46,13 @@ public class State {
 		List<State> ret = new ArrayList<>();
 		for (int i = 0; i < HighLevelGameboard.nbRobots; i++) {
 			for (Direction d : Direction.values()) {
+
+				HighLevelGameboard duplicate = gameboard.duplicate(depth + 1);
+				Token robot = duplicate.getRobots().get(i);
+				duplicate.moveUntilWall(robot, d);
+
 				State s = new State();
-				s.setGameboard(gameboard.duplicate(depth + 1));
+				s.setGameboard(duplicate);
 				ret.add(s);
 			}
 		}

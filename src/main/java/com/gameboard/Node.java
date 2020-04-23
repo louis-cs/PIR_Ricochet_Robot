@@ -1,5 +1,6 @@
 package com.gameboard;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
 import java.util.Random;
@@ -7,7 +8,7 @@ import java.util.Random;
 public class Node implements Comparable<Node>{
 	private State state;
 	private Node parent;
-	private List<Node> childArray;
+	private List<Node> childArray = new ArrayList<>();
 
 	private static final Random random = new Random();
 
@@ -17,14 +18,6 @@ public class Node implements Comparable<Node>{
 
 	public Node(Node node){
 		this.state = node.state.duplicate();
-	}
-
-	public void setState(State state) {
-		this.state = state;
-	}
-
-	public void setChildArray(List<Node> childArray) {
-		this.childArray = childArray;
 	}
 
 	public void setParent(Node parent) {

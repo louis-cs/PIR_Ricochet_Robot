@@ -126,10 +126,16 @@ public class ControllerMainGUI implements Initializable {
         backwardButton.setDisable(false);
         forwardButton.setDisable(false);
         TreeSearch t = new TreeSearch();
-        solutionList = t.search(gameboard);
+
+        if(HighLevelGameboard.solvingMethod == HighLevelGameboard.solvingMethods.MonteCarlo) {
+            gameboard = t.findNextMove(gameboard);
+            update();
+        }
+        else
+            solutionList = t.search(gameboard);
+
         label.setText(TreeSearch.message);
-        if(label.getText().contains("search failed"))
-        {
+        if(label.getText().contains("search failed")) {
             backwardButton.setDisable(true);
             forwardButton.setDisable(true);
         }
