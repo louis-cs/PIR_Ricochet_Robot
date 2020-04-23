@@ -2,13 +2,36 @@ package com.gameboard;
 
 import java.util.List;
 import java.util.Collections;
+import java.util.Random;
 
 public class Node implements Comparable<Node>{
-	private HighLevelGameboard state;
+	private State state;
 	private Node parent;
 	private List<Node> childArray;
 
-	public HighLevelGameboard getState(){
+	private static final Random random = new Random();
+
+	public Node(State state){
+		this.state = state;
+	}
+
+	public Node(Node node){
+		this.state = node.state.duplicate();
+	}
+
+	public void setState(State state) {
+		this.state = state;
+	}
+
+	public void setChildArray(List<Node> childArray) {
+		this.childArray = childArray;
+	}
+
+	public void setParent(Node parent) {
+		this.parent = parent;
+	}
+
+	public State getState(){
 		return state;
 	}
 
@@ -28,12 +51,12 @@ public class Node implements Comparable<Node>{
 		return childArray.get(0);
 	}
 
+	public Node getRandomChildNode() {
+		return childArray.get(random.nextInt(childArray.size()));
+	}
+
 	@Override
 	public int compareTo(Node node) {
 		return state.compareTo(node.getState());
-	}
-
-	public void setState(HighLevelGameboard board) {
-		state = board;
 	}
 }

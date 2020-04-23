@@ -1,10 +1,9 @@
 package com.graph.struct;
 
-import com.gameboard.Direction;
-import com.gameboard.HighLevelGameboard;
-import com.gameboard.Token;
+import com.gameboard.*;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class TreeSearch{
 
@@ -43,6 +42,7 @@ public class TreeSearch{
 						if (gameboardClone.getDistanceToObjective() == 0) {
 							solution = gameboardClone;
 							depth = solution.getDepth();
+							//System.out.println("finito" + depth);
 							break LOOP;
 						}
 						binaryHeap.insert(gameboardClone);
@@ -52,14 +52,15 @@ public class TreeSearch{
 				}
 			}
 			binaryHeap.deleteMin();
-			depth = binaryHeap.findMin().getDepth();
-			distanceToObjective = binaryHeap.findMin().getDistanceToObjective();
+			solution = binaryHeap.findMin();
+			depth = solution.getDepth();
+			distanceToObjective = solution.getDistanceToObjective();
 			RAM = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000;
 		}
 
-		if(RAM < MAX_RAM) {
-			//HighLevelGameboard solution = binaryHeap.findMin();
-			assert solution != null;
+		//distance to objective should never be 0 if functioning right
+		if(RAM < MAX_RAM || distanceToObjective==0) {
+
 			for (ArrayList<Token> move : solution.getPreviousMoves()) {
 				HighLevelGameboard board = new HighLevelGameboard(move, 0, solution.getPreviousMoves());
 				//board.displayBoard();
@@ -68,7 +69,7 @@ public class TreeSearch{
 			}
 			solutionList.add(solution);
 			//System.out.println("depth:"+depth+" solution size:"+(solutionList.size()-1));
-			depth = solutionList.size()-1;
+			//depth = solutionList.size()-1;
 			message = "iterations : " + nbIter + "\ndepth : " + depth;
 			success = true;
 		}else {
@@ -78,5 +79,69 @@ public class TreeSearch{
 		System.gc();
 
 		return solutionList;
+	}
+
+	public HighLevelGameboard findNextMove(HighLevelGameboard gameboard) {
+
+		Tree tree = new Tree();
+		Node rootNode = tree.getRoot();
+		rootNode.getState().setGameboard(gameboard);
+
+		long RAM = 0;
+		while (RAM < MAX_RAM) {
+			Node promisingNode = selectPromisingNode(rootNode);
+			if (promisingNode.getState().getGameboard().getDistanceToObjective() != 0) {
+				expandNode(promisingNode);
+			}
+			Node nodeToExplore = promisingNode;
+			if (promisingNode.getChildArray().size() > 0) {
+				nodeToExplore = promisingNode.getRandomChildNode();
+			}
+			int playoutResult = simulateRandomPlayout(nodeToExplore);
+			backPropogation(nodeToExplore);
+
+			RAM = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000;
+		}
+
+		Node winnerNode = rootNode.getChildWithBestScore();
+		tree.setRoot(winnerNode);
+		return winnerNode.getState().getGameboard();
+	}
+
+	private Node selectPromisingNode(Node rootNode) {
+		Node node = rootNode;
+		while (node.getChildArray().size() != 0) {
+			node = UCT.findBestNodeWithUCT(node);
+		}
+		return node;
+	}
+
+	private void expandNode(Node node) {
+		List<State> possibleStates = node.getState().getAllPossibleStates();
+		possibleStates.forEach(state -> {
+			Node newNode = new Node(state);
+			newNode.setParent(node);
+			node.getChildArray().add(newNode);
+		});
+	}
+
+	private void backPropogation(Node nodeToExplore) {
+		Node tempNode = nodeToExplore;
+		while (tempNode != null) {
+			tempNode.getState().incrementVisit();
+			tempNode = tempNode.getParent();
+		}
+	}
+
+	private int simulateRandomPlayout(Node node) {
+		Node tempNode = new Node(node);
+		State tempState = tempNode.getState();
+
+		int i=0;
+		while (tempState.getGameboard().getDistanceToObjective() != 0 || i<4) {
+			i++;
+			tempState.randomPlay();
+		}
+		return tempState.getGameboard().getDistanceToObjective();
 	}
 }
