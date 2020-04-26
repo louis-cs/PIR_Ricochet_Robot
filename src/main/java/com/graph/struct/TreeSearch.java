@@ -3,6 +3,7 @@ package com.graph.struct;
 import com.gameboard.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public class TreeSearch{
@@ -81,17 +82,23 @@ public class TreeSearch{
 		return solutionList;
 	}
 
-	public HighLevelGameboard findNextMove(HighLevelGameboard gameboard) {
+	public ArrayList<HighLevelGameboard> findNextMove(HighLevelGameboard gameboard) {
 
 		Tree tree = new Tree(gameboard);
 		Node rootNode = tree.getRoot();
 
 		long RAM = 0;
-		while (RAM < MAX_RAM) {
+		int nbIter = 0;
+		Node winnerNode = null;
+		//System.out.println("RAM" + RAM + "MAX_RAM" + MAX_RAM);
+		while (RAM < MAX_RAM && winnerNode == null) {
+			nbIter++;
 			Node promisingNode = selectPromisingNode(rootNode);
-			if (promisingNode.getState().getGameboard().getDistanceToObjective() != 0) {
+			if (promisingNode.getState().getGameboard().getDistanceToObjective() == 0)//WIN CONDITION
+				winnerNode = promisingNode;
+			else
 				expandNode(promisingNode);
-			}
+
 			Node nodeToExplore = promisingNode;
 			if (promisingNode.getChildArray().size() > 0) {
 				nodeToExplore = promisingNode.getRandomChildNode();
@@ -102,9 +109,23 @@ public class TreeSearch{
 			RAM = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000;
 		}
 
-		Node winnerNode = rootNode.getChildWithBestScore();
-		tree.setRoot(winnerNode);
-		return winnerNode.getState().getGameboard();
+		System.gc();
+
+		ArrayList<HighLevelGameboard> solutionList = new ArrayList<>();
+
+		if(winnerNode == null){
+			TreeSearch.message = "search failed";
+			return solutionList;
+		}
+
+		TreeSearch.message = "iterations : " + nbIter + "\ndepth : " + depth;
+		solutionList.add(winnerNode.getState().getGameboard());
+		while(winnerNode!=rootNode){
+			winnerNode = winnerNode.getParent();
+			solutionList.add(winnerNode.getState().getGameboard());
+		}
+		Collections.reverse(solutionList);
+		return solutionList;
 	}
 
 	private Node selectPromisingNode(Node rootNode) {

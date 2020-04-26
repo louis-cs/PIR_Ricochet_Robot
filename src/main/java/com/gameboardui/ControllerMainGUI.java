@@ -128,11 +128,11 @@ public class ControllerMainGUI implements Initializable {
         TreeSearch t = new TreeSearch();
 
         if(HighLevelGameboard.solvingMethod == HighLevelGameboard.solvingMethods.MonteCarlo) {
-            gameboard = t.findNextMove(gameboard);
-            update();
+            solutionList = t.findNextMove(gameboard);
         }
-        else
+        else {
             solutionList = t.search(gameboard);
+        }
 
         label.setText(TreeSearch.message);
         if(label.getText().contains("search failed")) {
