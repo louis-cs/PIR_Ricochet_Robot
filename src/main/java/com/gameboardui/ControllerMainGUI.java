@@ -127,12 +127,7 @@ public class ControllerMainGUI implements Initializable {
         forwardButton.setDisable(false);
         TreeSearch t = new TreeSearch();
 
-        if(HighLevelGameboard.solvingMethod == HighLevelGameboard.solvingMethods.MonteCarlo) {
-            solutionList = t.findNextMove(gameboard);
-        }
-        else {
-            solutionList = t.search(gameboard);
-        }
+        solutionList = t.search(gameboard);
 
         label.setText(TreeSearch.message);
         if(label.getText().contains("search failed")) {
@@ -204,29 +199,68 @@ public class ControllerMainGUI implements Initializable {
             HighLevelGameboard.solvingMethod = HighLevelGameboard.solvingMethods.MonteCarlo;
     }
 
+    private ArrayList<XYChart.Series<Integer,Integer>> getSeries(){
+
+        XYChart.Series<Integer,Integer> series = new XYChart.Series<>();
+        XYChart.Series<Integer,Integer> seriesFailures = new XYChart.Series<>();
+
+        if(breadthFirstButton.isSelected()) {
+            series.setName("Breadth First");
+            seriesFailures.setName("Breadth First Failures");
+
+            for(XYChart.Series<Integer,Integer> s : chart.getData()) {
+                if (s.getName().equals(series.getName()))
+                    series = s;
+                if (s.getName().equals(seriesFailures.getName()))
+                    seriesFailures = s;
+            }
+        }
+        else if(bestFirstButton.isSelected()){
+            series.setName("Best First");
+            seriesFailures.setName("Best First Failures");
+
+            for(XYChart.Series<Integer,Integer> s : chart.getData()) {
+                if (s.getName().equals(series.getName()))
+                    series = s;
+                if (s.getName().equals(seriesFailures.getName()))
+                    seriesFailures = s;
+            }
+        }
+        else if(AStarButton.isSelected()) {
+            series.setName("A*");
+            seriesFailures.setName("A* Failures");
+
+            for(XYChart.Series<Integer,Integer> s : chart.getData()) {
+                if (s.getName().equals(series.getName()))
+                    series = s;
+                if (s.getName().equals(seriesFailures.getName()))
+                    seriesFailures = s;
+            }
+        }
+        else {
+            series.setName("Monte Carlo");
+            seriesFailures.setName("Monte Carlo Failures");
+
+            for(XYChart.Series<Integer,Integer> s : chart.getData()) {
+                if (s.getName().equals(series.getName()))
+                    series = s;
+                if (s.getName().equals(seriesFailures.getName()))
+                    seriesFailures = s;
+            }
+        }
+        ArrayList<XYChart.Series<Integer,Integer>> ret = new ArrayList<>();
+        ret.add(series);
+        ret.add(seriesFailures);
+        return ret;
+    }
+
     public void evaluatePerformance() {
         int avrgDepth=0, succesRate=0, nb=20, avrgTime = 0;
         TreeSearch t = new TreeSearch();
 
         //---------------------CHART----------------------
-        XYChart.Series<Integer,Integer> series = new XYChart.Series<>();
-        XYChart.Series<Integer,Integer> seriesFailures = new XYChart.Series<>();
-        if(breadthFirstButton.isSelected()) {
-            series.setName("Breadth First");
-            seriesFailures.setName("Breadth First Failures");
-        }
-        else if(bestFirstButton.isSelected()){
-            series.setName("Best First");
-            seriesFailures.setName("Best First Failures");
-        }
-        else if(AStarButton.isSelected()) {
-            series.setName("A*");
-            seriesFailures.setName("A* Failures");
-        }
-        else {
-            series.setName("Monte Carlo");
-            seriesFailures.setName("Monte Carlo Failures");
-        }
+        XYChart.Series<Integer,Integer> series = getSeries().get(0);
+        XYChart.Series<Integer,Integer> seriesFailures = getSeries().get(1);
 
         random = new Random(seed);
         for(int i=0; i<nb; i++){
@@ -257,7 +291,8 @@ public class ControllerMainGUI implements Initializable {
                 "\nsuccess rate : "+succesRate+"%");
         RamTextField.setText(String.valueOf(TreeSearch.MAX_RAM));
 
-        chart.getData().add(series);
+        if(!chart.getData().contains(series))
+            chart.getData().add(series);
     }
 
     public void performanceRamChanged() {

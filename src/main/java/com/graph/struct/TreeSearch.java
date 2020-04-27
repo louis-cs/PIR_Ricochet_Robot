@@ -14,83 +14,74 @@ public class TreeSearch{
 	public static int depth = 0;
 	public static boolean success = false;
 
+	public ArrayList<HighLevelGameboard> search(HighLevelGameboard gameboard){
+		if(HighLevelGameboard.solvingMethod == HighLevelGameboard.solvingMethods.MonteCarlo)
+			return monteCarloSearch(gameboard);
+		else
+			return newSearch(gameboard);
+	}
+
 	/**
 	 * tries to find a solution to a specific game and prints the solution
+	 * @param gameboard The board to start the search on
+	 * @return A list of every move to get to the objective
 	 */
-	public ArrayList<HighLevelGameboard> search(HighLevelGameboard gameboard) { //stopper l'algo quand on arrive à l'objectif
+	public ArrayList<HighLevelGameboard> newSearch(HighLevelGameboard gameboard){
 
-		BinaryHeap<HighLevelGameboard> binaryHeap = new BinaryHeap<>();
-		binaryHeap.insert(gameboard);
-		ArrayList<HighLevelGameboard> solutionList = new ArrayList<>();
-		HighLevelGameboard solution = null;
+		Tree tree = new Tree(gameboard);
+		Node winnerNode = null;
+		BinaryHeap<Node> binaryHeap = new BinaryHeap<>();
+		binaryHeap.insert(tree.getRoot());
 		depth = gameboard.getDepth();
 
 		long RAM = 0;
-		int distanceToObjective = Integer.MAX_VALUE, nbIter = 0;
+		int nbIter = 0;
 
-		LOOP:
-		while (distanceToObjective != 0 && RAM < MAX_RAM) {
-			for (int i = 0; i < HighLevelGameboard.nbRobots; i++) {
-				for (Direction d : Direction.values()) {
-					nbIter++;
-					//il faut le clone autant de fois que de situations
-					HighLevelGameboard gameboardClone = binaryHeap.findMin().duplicate(depth + 1);
-
-					Token robot = gameboardClone.getRobots().get(i);
-					//insert the gameboard only if the robot moved
-					if (gameboardClone.moveUntilWall(robot, d) != 0) {
-						//win condition
-						if (gameboardClone.getDistanceToObjective() == 0) {
-							solution = gameboardClone;
-							depth = solution.getDepth();
-							//System.out.println("finito" + depth);
-							break LOOP;
-						}
-						binaryHeap.insert(gameboardClone);
-					}
-					//gameboardClone.displayBoard();
-					//System.out.println("distanceToObjective: " + gameboardClone.getDistanceToObjective());
+		while (RAM < MAX_RAM && winnerNode == null) {
+			nbIter++;
+			Node bestNode = binaryHeap.deleteMin();
+			expandNode(bestNode);
+			for(Node child : bestNode.getChildArray()) {
+				if(child.getState().getGameboard().getDistanceToObjective()==0) {//WIN CONDITION
+					winnerNode = child;
 				}
+				binaryHeap.insert(child);
 			}
-			binaryHeap.deleteMin();
-			solution = binaryHeap.findMin();
-			depth = solution.getDepth();
-			distanceToObjective = solution.getDistanceToObjective();
+			depth = bestNode.getState().getGameboard().getDepth();
 			RAM = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000;
-		}
-
-		//distance to objective should never be 0 if functioning right
-		if(RAM < MAX_RAM || distanceToObjective==0) {
-
-			for (ArrayList<Token> move : solution.getPreviousMoves()) {
-				HighLevelGameboard board = new HighLevelGameboard(move, 0, solution.getPreviousMoves());
-				//board.displayBoard();
-				//System.out.println("distanceToObjective: " + board.getRobotSeekingObjective().getDistanceToObjective());
-				solutionList.add(board);
-			}
-			solutionList.add(solution);
-			//System.out.println("depth:"+depth+" solution size:"+(solutionList.size()-1));
-			//depth = solutionList.size()-1;
-			message = "iterations : " + nbIter + "\ndepth : " + depth;
-			success = true;
-		}else {
-			message = "search failed\ndepth : " + depth;
-			success = false;
 		}
 		System.gc();
 
+		ArrayList<HighLevelGameboard> solutionList = new ArrayList<>();
+
+		if(winnerNode == null){
+			message = "search failed\ndepth : " + depth+1;
+			success = false;
+			System.gc();
+			return solutionList;
+		}
+
+		message = "iterations : " + nbIter + "\ndepth : " + depth+1;
+		success = true;
+		solutionList.add(winnerNode.getState().getGameboard());
+		while(winnerNode!=tree.getRoot()){
+			winnerNode = winnerNode.getParent();
+			solutionList.add(winnerNode.getState().getGameboard());
+		}
+		Collections.reverse(solutionList);
+		System.gc();
 		return solutionList;
 	}
 
-	public ArrayList<HighLevelGameboard> findNextMove(HighLevelGameboard gameboard) {
+	public ArrayList<HighLevelGameboard> monteCarloSearch(HighLevelGameboard gameboard) {
 
 		Tree tree = new Tree(gameboard);
 		Node rootNode = tree.getRoot();
+		Node winnerNode = null;
 
 		long RAM = 0;
 		int nbIter = 0;
-		Node winnerNode = null;
-		//System.out.println("RAM" + RAM + "MAX_RAM" + MAX_RAM);
+
 		while (RAM < MAX_RAM && winnerNode == null) {
 			nbIter++;
 			Node promisingNode = selectPromisingNode(rootNode);
@@ -102,29 +93,34 @@ public class TreeSearch{
 			Node nodeToExplore = promisingNode;
 			if (promisingNode.getChildArray().size() > 0) {
 				nodeToExplore = promisingNode.getRandomChildNode();
+				//nodeToExplore = promisingNode.getChildWithBestScore();
 			}
 			int playoutResult = simulateRandomPlayout(nodeToExplore);
 			backPropogation(nodeToExplore, playoutResult);
 
 			RAM = (Runtime.getRuntime().totalMemory() - Runtime.getRuntime().freeMemory()) / 1000000;
+			depth = promisingNode.getState().getGameboard().getDepth();
 		}
 
-		System.gc();
 
 		ArrayList<HighLevelGameboard> solutionList = new ArrayList<>();
 
 		if(winnerNode == null){
-			TreeSearch.message = "search failed";
+			message = "search failed";
+			success = false;
+			System.gc();
 			return solutionList;
 		}
 
-		TreeSearch.message = "iterations : " + nbIter + "\ndepth : " + depth;
+		message = "iterations : " + nbIter + "\ndepth : " + depth;
+		success = true;
 		solutionList.add(winnerNode.getState().getGameboard());
 		while(winnerNode!=rootNode){
 			winnerNode = winnerNode.getParent();
 			solutionList.add(winnerNode.getState().getGameboard());
 		}
 		Collections.reverse(solutionList);
+		System.gc();
 		return solutionList;
 	}
 

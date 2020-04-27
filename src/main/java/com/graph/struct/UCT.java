@@ -1,4 +1,4 @@
-package com.gameboard;
+package com.graph.struct;
 
 import java.util.Collections;
 import java.util.Comparator;

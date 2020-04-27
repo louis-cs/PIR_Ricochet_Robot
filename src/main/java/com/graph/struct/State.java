@@ -1,4 +1,8 @@
-package com.gameboard;
+package com.graph.struct;
+
+import com.gameboard.Direction;
+import com.gameboard.HighLevelGameboard;
+import com.gameboard.Token;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,11 +53,13 @@ public class State {
 
 				HighLevelGameboard duplicate = gameboard.duplicate(depth + 1);
 				Token robot = duplicate.getRobots().get(i);
-				duplicate.moveUntilWall(robot, d);
 
-				State s = new State();
-				s.setGameboard(duplicate);
-				ret.add(s);
+				//if the robot moved
+				if(duplicate.moveUntilWall(robot, d) != 0) {
+					State s = new State();
+					s.setGameboard(duplicate);
+					ret.add(s);
+				}
 			}
 		}
 		return ret;

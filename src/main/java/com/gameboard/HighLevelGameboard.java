@@ -17,7 +17,6 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 	 */
 	private static ArrayList<ArrayList<Boolean>> collision;
 	private ArrayList<Token> robots;
-	private ArrayList<ArrayList<Token>> previousMoves;
 	private static Token objective;
 
 	/**
@@ -60,10 +59,9 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 	/**
 	 * to be used only if you already generated the board
 	 */
-	public HighLevelGameboard(ArrayList<Token> robots, int depth, ArrayList<ArrayList<Token>> previousMoves){
+	public HighLevelGameboard(ArrayList<Token> robots, int depth){
 		this.robots = robots;
 		this.depth = depth;
-		this.previousMoves = previousMoves;
 	}
 
 	/**
@@ -74,11 +72,7 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 		ArrayList<Token> robotsDuplicate = new ArrayList<>();
 		for(Token robot : robots)
 			robotsDuplicate.add(robot.duplicate());
-		ArrayList<ArrayList<Token>> previousMovesDuplicate = new ArrayList<>();
-		for(ArrayList<Token> move : previousMoves) {
-			previousMovesDuplicate.add(new ArrayList<>(move));
-		}
-		return new HighLevelGameboard(robotsDuplicate, depth, previousMovesDuplicate);
+		return new HighLevelGameboard(robotsDuplicate, depth);
 	}
 
 	@Override
@@ -162,10 +156,6 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 		return objective;
 	}
 
-	public ArrayList<ArrayList<Token>> getPreviousMoves(){
-		return this.previousMoves;
-	}
-
 	public ArrayList<Coordinates> potentialMoves(Coordinates c){
 
 		ArrayList<Coordinates> potentialMoves = new ArrayList<>();
@@ -187,7 +177,6 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 		ArrayList<Token> robotsDuplicate = new ArrayList<>();
 		for(Token r : robots)
 			robotsDuplicate.add(r.duplicate());
-		previousMoves.add(robotsDuplicate);
 
 		int numberOfMoves = 0;
 		Coordinates c = robot.getCoordinates();
@@ -324,7 +313,6 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 		cells = new ArrayList<>();
 		collision = new ArrayList<>();
 		robots = new ArrayList<>();
-		previousMoves = new ArrayList<>();
 
 		for(int i=0; i<max; i++){
 			cells.add(new ArrayList<>());

@@ -1,4 +1,6 @@
-package com.gameboard;
+package com.graph.struct;
+
+import com.gameboard.HighLevelGameboard;
 
 public class Tree {
 	private Node root;
