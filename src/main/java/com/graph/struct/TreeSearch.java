@@ -32,7 +32,6 @@ public class TreeSearch{
 		Node winnerNode = null;
 		BinaryHeap<Node> binaryHeap = new BinaryHeap<>();
 		binaryHeap.insert(tree.getRoot());
-		depth = gameboard.getDepth();
 
 		long RAM = 0;
 		int nbIter = 0;
@@ -55,13 +54,13 @@ public class TreeSearch{
 		ArrayList<HighLevelGameboard> solutionList = new ArrayList<>();
 
 		if(winnerNode == null){
-			message = "search failed\ndepth : " + depth+1;
+			message = "search failed\ndepth : " + (depth+1);
 			success = false;
 			System.gc();
 			return solutionList;
 		}
 
-		message = "iterations : " + nbIter + "\ndepth : " + depth+1;
+		message = "iterations : " + nbIter + "\ndepth : " + (depth+1);
 		success = true;
 		solutionList.add(winnerNode.getState().getGameboard());
 		while(winnerNode!=tree.getRoot()){
@@ -84,6 +83,7 @@ public class TreeSearch{
 
 		while (RAM < MAX_RAM && winnerNode == null) {
 			nbIter++;
+			//leaf with best value
 			Node promisingNode = selectPromisingNode(rootNode);
 			if (promisingNode.getState().getGameboard().getDistanceToObjective() == 0)//WIN CONDITION
 				winnerNode = promisingNode;
@@ -106,7 +106,7 @@ public class TreeSearch{
 		ArrayList<HighLevelGameboard> solutionList = new ArrayList<>();
 
 		if(winnerNode == null){
-			message = "search failed";
+			message = "search failed\ndepth : " + (depth+1);
 			success = false;
 			System.gc();
 			return solutionList;
@@ -151,11 +151,10 @@ public class TreeSearch{
 	}
 
 	private int simulateRandomPlayout(Node node) {
-		Node tempNode = new Node(node);
-		State tempState = tempNode.getState();
+		State tempState = node.getState().duplicate();
 
 		int i=0;
-		while (tempState.getGameboard().getDistanceToObjective() != 0 || i<4) {
+		while (tempState.getGameboard().getDistanceToObjective() != 0 && i<4) {
 			i++;
 			tempState.randomPlay();
 		}

@@ -22,7 +22,7 @@ public class HighLevelGameboard extends GenericGameboard implements Comparable<H
 	/**
 	 * number of moves -or- the depth of the tree search
 	 */
-	private final int depth;
+	private int depth;
 
 	private static Random random;
 

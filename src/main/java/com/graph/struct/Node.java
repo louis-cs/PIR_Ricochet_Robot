@@ -16,10 +16,6 @@ public class Node implements Comparable<Node>{
 		this.state = state;
 	}
 
-	public Node(Node node){
-		this.state = node.state.duplicate();
-	}
-
 	public void setParent(Node parent) {
 		this.parent = parent;
 	}
