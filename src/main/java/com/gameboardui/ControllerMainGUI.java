@@ -280,6 +280,7 @@ public class ControllerMainGUI implements Initializable {
                 series.getData().add(new XYChart.Data<>(TreeSearch.depth, time));
             }
             else{
+                avrgDepth += TreeSearch.depth;
                 seriesFailures.getData().add(new XYChart.Data<>(TreeSearch.depth, time));
             }
         }
