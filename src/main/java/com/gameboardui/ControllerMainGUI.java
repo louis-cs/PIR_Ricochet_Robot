@@ -255,7 +255,8 @@ public class ControllerMainGUI implements Initializable {
     }
 
     public void evaluatePerformance() {
-        int avrgDepth=0, succesRate=0, nb=20, avrgTime = 0;
+        int succesRate=0, nb=20, avrgTime = 0;
+        float avrgDepth=0;
         TreeSearch t = new TreeSearch();
 
         //---------------------CHART----------------------
