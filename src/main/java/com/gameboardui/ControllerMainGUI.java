@@ -90,25 +90,26 @@ public class ControllerMainGUI implements Initializable {
         //no robot, either direction or nothing
         if(robotHighlighted!=null){
             Direction d = null;
-            if (c.getX() == robotHighlighted.getCoordinates().getX()) {//up or down
-                if (c.getY() > robotHighlighted.getCoordinates().getY())
+            if (c.getX() == robotHighlighted.getCoordinates().getX() && c.getY()!= robotHighlighted.getCoordinates().getY()) {//right or left
+                if (c.getY() > robotHighlighted.getCoordinates().getY() )
                     d = Direction.right;
                 else
                     d = Direction.left;
             }
-            if (c.getY() == robotHighlighted.getCoordinates().getY()) {//up or down
-                if (c.getX() > robotHighlighted.getCoordinates().getX())
+            if (c.getY() == robotHighlighted.getCoordinates().getY() && c.getX()!= robotHighlighted.getCoordinates().getX()) {//up or down
+                if (c.getX() > robotHighlighted.getCoordinates().getX() )
                     d = Direction.down;
                 else
                     d = Direction.up;
             }
 
-            if (d != null)
+            if (d != null) {
                 gameboard.moveUntilWall(robotHighlighted, d);
-
+                System.out.println(d);
+                stepLabel.setText(String.valueOf(Integer.parseInt(stepLabel.getText()) + 1));
+            }
             highlighted.clear();
             robotHighlighted = null;
-            stepLabel.setText(String.valueOf(Integer.parseInt(stepLabel.getText())+1));
         }
 
         //there is a robot
@@ -116,7 +117,6 @@ public class ControllerMainGUI implements Initializable {
             highlighted = gameboard.potentialMoves(c);
             robotHighlighted=robot;
         }
-
         update();
     }
 
